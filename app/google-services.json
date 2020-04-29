@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1057755749597",
+    "firebase_url": "https://air-deposit.firebaseio.com",
+    "project_id": "air-deposit",
+    "storage_bucket": "air-deposit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057755749597:android:2ac3a928f945573357cf34",
+        "android_client_info": {
+          "package_name": "com.example.airdeposit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057755749597-mpijrofc0f4dca7bvablkve1h8okib8s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.airdeposit",
+            "certificate_hash": "64c999b73a7f38c766b14821f4b8a983326fdb46"
+          }
+        },
+        {
+          "client_id": "1057755749597-nbtc4eoq0sd4sbrqvpdejku0b4m5fk0e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_v8ZUcEApxHvyFpBVLvbbl1Yk-epLB1I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057755749597-nbtc4eoq0sd4sbrqvpdejku0b4m5fk0e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

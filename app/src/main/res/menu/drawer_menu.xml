@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group>
+        <item
+            android:id="@+id/homeFragment"
+            android:icon="@drawable/icon_home"
+            android:title="Home"/>
+        <item
+            android:id="@+id/addStorageFragment"
+            android:icon="@drawable/ic_icon_map_storage"
+            android:title="Add storage"/>
+        <item
+            android:id="@+id/organiseFragment"
+            android:icon="@drawable/ic_clipboard"
+            android:title="Organise"/>
+        <item
+            android:id="@+id/refillFragment"
+            android:icon="@drawable/icon_reload"
+            android:title="Refill"/>
+        <item
+            android:id="@+id/addGameFragment"
+            android:icon="@drawable/icon_add"
+            android:title="Add game"/>
+        <item
+            android:id="@+id/nav_log_out"
+            android:icon="@drawable/icon_logout"
+            android:title="Log out"/>
+
+    </group>
+</menu>

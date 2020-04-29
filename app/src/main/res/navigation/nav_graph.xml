@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/addGameFragment"
+        android:name="com.example.airdeposit.fragments.AddGameFragment"
+        android:label="AddGameFragment"
+        tools:layout="@layout/fragment_add_game">
+
+        <action
+            android:id="@+id/action_addGameFragment_to_homeFragment"
+            app:popUpTo="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addStorageFragment"
+        android:name="com.example.airdeposit.fragments.AddStorageFragment"
+        android:label="AddStorageFragment"
+        tools:layout="@layout/fragment_add_storage">
+
+        <action
+            android:id="@+id/action_addStorageFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.airdeposit.fragments.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_homeFragment_to_addGameFragment"
+            app:destination="@id/addGameFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_refillFragment"
+            app:destination="@id/refillFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_addStorageFragment"
+            app:destination="@id/addStorageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/organiseFragment"
+        android:name="com.example.airdeposit.fragments.OrganiseFragment"
+        android:label="OrganiseFragment"
+        tools:layout="@layout/fragment_organise">
+    </fragment>
+    <fragment
+        android:id="@+id/refillFragment"
+        android:name="com.example.airdeposit.fragments.RefillFragment"
+        android:label="RefillFragment"
+        tools:layout="@layout/fragment_refill">
+
+    </fragment>
+</navigation>
