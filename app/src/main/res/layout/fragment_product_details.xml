@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.ProductDetailsFragment"
+    android:id="@+id/fragment_product_details"
+    android:background="@color/backGround">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="350dp"
+        android:layout_height="500dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:cardCornerRadius="40dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/tvNameOfProduct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-black"
+
+                android:gravity="center"
+                android:text="Titlu"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvbarCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="32dp"
+                android:text="Name: "
+                android:textSize="27sp"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvNameOfProduct" />
+
+            <TextView
+                android:textSize="27sp"
+                android:id="@+id/tvBOH"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="32dp"
+                android:text="TextView"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvbarCode" />
+
+            <TextView
+                android:textSize="27sp"
+                android:id="@+id/tvFOH"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="32dp"
+                android:text="TextView"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvBOH" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="348dp"
+                android:layout_height="3dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="1dp"
+                android:background="@color/lightGreenMint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvBOH" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="348dp"
+                android:layout_height="3dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="1dp"
+                android:background="@color/lightGreenMint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvFOH" />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="348dp"
+                android:layout_height="3dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="1dp"
+                android:background="@color/lightGreenMint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvbarCode" />
+            <TextView
+                android:textSize="27sp"
+                android:id="@+id/tvSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="32dp"
+                android:text="TextView"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvFOH" />
+
+            <View
+                android:id="@+id/divider5"
+                android:layout_width="348dp"
+                android:layout_height="3dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="1dp"
+                android:background="@color/lightGreenMint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvSize" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
