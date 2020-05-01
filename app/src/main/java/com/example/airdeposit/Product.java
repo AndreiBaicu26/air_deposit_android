@@ -3,6 +3,8 @@ package com.example.airdeposit;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.firestore.DocumentReference;
+
 import java.util.List;
 
 public class Product implements Parcelable {
@@ -13,7 +15,7 @@ public class Product implements Parcelable {
     private int foh;
     private int maxPlayers;
     private String size;
-    private List<StorageSpace> listOfPlacesDeposited;
+    private List<DocumentReference> listOfPlacesDeposited;
 
     public Product(String productID, String nameOfProduct, int boh, int foh, int maxPlayers, String size) {
         this.productID = productID;
@@ -85,7 +87,7 @@ public class Product implements Parcelable {
         return size;
     }
 
-    public List<StorageSpace> getListOfPlacesDeposited() {
+    public List<DocumentReference> getListOfPlacesDeposited() {
         return listOfPlacesDeposited;
     }
 }

@@ -12,9 +12,13 @@
         tools:layout="@layout/fragment_add_game"/>
     <fragment
         android:id="@+id/addStorageFragment"
-        android:name="com.example.airdeposit.fragments.AddStorageFragment"
+        android:name="com.example.airdeposit.fragments.ListOfStoragesFragment"
         android:label="AddStorageFragment"
-        tools:layout="@layout/fragment_add_storage"/>
+        tools:layout="@layout/fragment_list_of_storages">
+        <action
+            android:id="@+id/action_addStorageFragment_to_addStorageFragment2"
+            app:destination="@id/addStorageFragment2" />
+    </fragment>
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.airdeposit.fragments.HomeFragment"
@@ -27,7 +31,10 @@
             android:id="@+id/action_homeFragment_to_productDetailsFragment"
             app:destination="@id/productDetailsFragment"
             app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_homeFragment_to_addStorageFragment"
+            app:destination="@id/addStorageFragment" />
     </fragment>
     <fragment
         android:id="@+id/organiseFragment"
@@ -60,14 +67,18 @@
             app:popUpToInclusive="false" />
     </fragment>
     <fragment
+
         android:id="@+id/productDetailsFragment"
         android:name="com.example.airdeposit.fragments.ProductDetailsFragment"
         android:label="fragment_product_details"
-        tools:layout="@layout/fragment_product_details" >
+        tools:layout="@layout/fragment_product_details" />
+    <fragment
+        android:id="@+id/addStorageFragment2"
+        android:name="com.example.airdeposit.AddStorageFragment"
+        android:label="fragment_add_storage"
+        tools:layout="@layout/fragment_add_storage" >
         <action
-            android:id="@+id/action_productDetailsFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_addStorageFragment2_to_addStorageFragment"
+            app:destination="@id/addStorageFragment" />
     </fragment>
 </navigation>
