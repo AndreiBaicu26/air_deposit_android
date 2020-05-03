@@ -27,6 +27,9 @@ import com.example.airdeposit.R;
 import com.example.airdeposit.StorageAdapter;
 import com.example.airdeposit.StorageSpace;
 import com.example.airdeposit.callbacks.CallbackGetStorages;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.dialog.MaterialDialogs;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -42,10 +45,11 @@ public class ListOfStoragesFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private Button btnAddStorage;
     EditText input;
-    String selectedId;
+
     private ArrayList<StorageSpace> list;
-    ImageView imageDelete;
+
     View view;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,15 +62,15 @@ public class ListOfStoragesFragment extends Fragment {
 
        });
 
-        createListToShow();
+        setUpRecyclerView();
 
         return view;
     }
 
-    private void removeStorage(int position){
+    private void removeStorage(StorageSpace storageSpace, int position){
 
-        Firebase.deleteStorageSpace(list.get(position));
-        list.remove(list.get(position));
+        Firebase.deleteStorageSpace(storageSpace);
+
         Snackbar.make(getView(), R.string.storage_deleted, BaseTransientBottomBar.LENGTH_SHORT).show();
         adapter.notifyItemRemoved(position);
     }
@@ -77,7 +81,7 @@ public class ListOfStoragesFragment extends Fragment {
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                     removeStorage(position);
+                     removeStorage(storage,position);
             }
         });
         builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -91,10 +95,13 @@ public class ListOfStoragesFragment extends Fragment {
     }
 
     private void setUpRecyclerView() {
+        FirestoreRecyclerOptions<StorageSpace> options = new FirestoreRecyclerOptions.Builder<StorageSpace>()
+                .setQuery(Firebase.queryForStoragesRecyclerView(),StorageSpace.class)
+                .build();
+        adapter = new StorageAdapter(options,true);
         recyclerView = view.findViewById(R.id.rvOfStorage);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
-        adapter = new StorageAdapter(list);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -106,24 +113,26 @@ public class ListOfStoragesFragment extends Fragment {
 
            @Override
            public void onDeleteItemClick(int position) {
-                createAlertForRemovingStorage(list.get(position), position);
+               createAlertForRemovingStorage(adapter.getItem(position), position);
 
            }
        });
+
     }
 
-    private void createListToShow(){
-
-
-        Firebase.getAllStorages(new CallbackGetStorages() {
-            @Override
-            public void getAllStorages(List<StorageSpace> storageSpaces) {
-                list = new ArrayList<StorageSpace>(storageSpaces);
-                setUpRecyclerView();
-            }
-
-        });
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapter.startListening();
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        adapter.stopListening();
+    }
+
+
 
     public LinearLayout createEditText(){
         LinearLayout container = new LinearLayout(getContext());

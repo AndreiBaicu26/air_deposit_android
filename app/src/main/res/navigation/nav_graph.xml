@@ -77,7 +77,9 @@
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_cameraScanFragment_to_organiseItemFragment"
-            app:destination="@id/organiseItemFragment" />
+            app:destination="@id/organiseItemFragment"
+            app:popUpTo="@id/organiseFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
 
@@ -92,7 +94,9 @@
         tools:layout="@layout/fragment_add_storage" >
         <action
             android:id="@+id/action_addStorageFragment2_to_addStorageFragment"
-            app:destination="@id/listOfStoragesFragment" />
+            app:destination="@id/listOfStoragesFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/organiseItemFragment"

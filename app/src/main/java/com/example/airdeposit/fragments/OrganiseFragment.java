@@ -19,7 +19,7 @@ public class OrganiseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_organise_item, container, false);
+        View view = inflater.inflate(R.layout.fragment_organise, container, false);
 
         btnScan = view.findViewById(R.id.btn_scan_organise);
         btnScan.setOnClickListener(v ->{

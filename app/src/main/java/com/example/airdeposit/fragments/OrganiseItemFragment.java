@@ -1,5 +1,7 @@
 package com.example.airdeposit.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -19,7 +21,11 @@ import com.example.airdeposit.R;
 import com.example.airdeposit.StorageAdapter;
 import com.example.airdeposit.StorageSpace;
 import com.example.airdeposit.callbacks.CallbackGetStorages;
+import com.example.airdeposit.callbacks.CallbackProductAddedToStorage;
 import com.example.airdeposit.databinding.FragmentOrganiseItemBinding;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.w3c.dom.Text;
 
@@ -44,7 +50,6 @@ public class OrganiseItemFragment extends Fragment {
 
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,46 +58,55 @@ public class OrganiseItemFragment extends Fragment {
 
        if(getArguments() != null) {
            product = getArguments().getParcelable("product");
-
        }
 
-       if(product != null){
-           String depositedIn = binder.tvDepositedIn.getText().toString();
-           binder.tvOrganiseItemName.setText(product.getNameOfProduct());
-           binder.tvSize.setText(product.getSize());
-           if(product.getListOfPlacesDeposited().isEmpty()) {
-               binder.tvDepositedIn.setText(depositedIn + " - ");
-           }else{
-               StringBuilder listOfDeposited = new StringBuilder();
-               listOfDeposited.append(depositedIn);
-               for(String storage : product.getListOfPlacesDeposited().keySet()){
-                   listOfDeposited.append(" "+ storage );
-               }
-               String result = listOfDeposited.toString() ;
-                binder.tvDepositedIn.setText(result);
-           }
-       }
-
-        createListToShow();
-
+       setUpRecyclerView();
+        setUpViews(product);
 
         view = binder.getRoot();
         return view;
     }
 
+    private void setUpViews(Product product) {
+        if(product != null){
+            String depositedIn = binder.tvDepositedIn.getText().toString();
+            String productName = "Name: " +product.getNameOfProduct();
+            String productSize = "Size: " + product.getSize().toUpperCase();
+            binder.tvOrganiseItemName.setText(productName);
+            binder.tvSize.setText(productSize);
+            if(product.getListOfPlacesDeposited() == null) {
+                binder.tvDepositedIn.setText(depositedIn + " - ");
+            }else{
+                StringBuilder listOfDeposited = new StringBuilder();
+                listOfDeposited.append(depositedIn);
+                for(String storage : product.getListOfPlacesDeposited().keySet()){
+                    listOfDeposited.append("  ").append(storage);
+                }
+                String result = listOfDeposited.toString() ;
+                binder.tvDepositedIn.setText(result);
+            }
+        }
+    }
+
+
+
     private void setUpRecyclerView() {
+        FirestoreRecyclerOptions<StorageSpace> options = new FirestoreRecyclerOptions.Builder<StorageSpace>()
+                .setQuery(Firebase.queryForStoragesRecyclerView(),StorageSpace.class)
+                .build();
+        adapter = new StorageAdapter(options,false);
         recyclerView = binder.rvAddProductsToStorage;
-        recyclerView.findViewById(R.id.imgRemove).setVisibility(View.INVISIBLE);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
-        adapter = new StorageAdapter(list);
+
+
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new StorageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-
+                createAlertDialogForAddingToStorage(adapter.getItem(position),position);
             }
 
             @Override
@@ -102,16 +116,33 @@ public class OrganiseItemFragment extends Fragment {
         });
     }
 
-    private void createListToShow(){
+    //TODO Remove product from storage space when removing storage space;
+    private void createAlertDialogForAddingToStorage(StorageSpace storage, int position) {
 
-
-        Firebase.getAllStorages(new CallbackGetStorages() {
-            @Override
-            public void getAllStorages(List<StorageSpace> storageSpaces) {
-                list = new ArrayList<StorageSpace>(storageSpaces);
-                setUpRecyclerView();
-            }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Add " + product.getNameOfProduct() + " to " +storage.getStorageID() );
+        builder.setPositiveButton("Yes", (dialogInterface, i) -> {
+           storage.storeProduct(product);
+           product.addProductToStorage(storage);
+           Firebase.addProductToStorage(storage, product, message -> Snackbar.make(getView(),message, BaseTransientBottomBar.LENGTH_SHORT).show());
 
         });
+        builder.setNegativeButton("No", ((dialogInterface, i) -> {
+
+        }));
+        builder.create().show();
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 }

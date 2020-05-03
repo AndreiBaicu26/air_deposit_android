@@ -85,11 +85,15 @@ public class StorageSpace implements Parcelable {
         this.maxSmall = maxSmall;
     }
 
-    public double getFilledPercentage(){
-        return 2.4;
+    public String getFilledPercentage(){
+        float totalProducts = this.maxBig+ this.maxSmall + this.maxMedium;
+        float calc = 100 - ((totalProducts * 100) / 70);
+        String strDouble = String.format("%.2f", calc);
+        return strDouble;
     }
 
     public void addBigProduct(){
+
         this.maxBig -=1;
         this.maxMedium -=2;
         this.maxSmall -= 4;
@@ -107,6 +111,34 @@ public class StorageSpace implements Parcelable {
         this.maxMedium -=1;
         this.maxSmall -= 1;
     }
+
+   public void storeProduct(Product p){
+        if(productExists(p)){
+            this.storedProducts.put(p.getNameOfProduct(),this.storedProducts.get(p.getNameOfProduct()+1));
+        }else {
+            this.storedProducts.put(p.getNameOfProduct(),1);
+        }
+
+        if(p.getSize().equals("small")){
+            addSmallProduct();
+        }else if(p.getSize().equals("medium")){
+            addMediumProduct();
+        }else{
+            addBigProduct();
+        }
+    }
+
+    private boolean productExists(Product p){
+        if(this.storedProducts == null){
+            this.storedProducts = new HashMap<>();
+        }
+        if(this.storedProducts.containsKey(p.getNameOfProduct())){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
     @Override
     public int describeContents() {

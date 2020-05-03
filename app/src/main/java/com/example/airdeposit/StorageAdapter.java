@@ -9,14 +9,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.auth.api.signin.internal.Storage;
 
 import java.util.ArrayList;
 
-public class StorageAdapter extends RecyclerView.Adapter <StorageAdapter.StorageViewHolder>{
+public class StorageAdapter extends FirestoreRecyclerAdapter<StorageSpace,StorageAdapter.StorageViewHolder> {
 
-    private ArrayList<StorageSpace> storageList;
     private  OnItemClickListener aListener;
+    private boolean isDeletable;
+
+
+    public StorageAdapter(@NonNull FirestoreRecyclerOptions<StorageSpace> options, boolean isDeletable) {
+
+        super(options);
+        this.isDeletable = isDeletable;
+    }
 
     public interface OnItemClickListener{
         void onItemClick(int position);
@@ -27,32 +36,30 @@ public class StorageAdapter extends RecyclerView.Adapter <StorageAdapter.Storage
         aListener = listener;
     }
 
-    public StorageAdapter(ArrayList<StorageSpace> storageList){
-        this.storageList = storageList;
-    }
 
     @NonNull
     @Override
     public StorageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-
-        StorageViewHolder storageViewHolder = new StorageViewHolder(view, aListener);
-        return storageViewHolder;
+        return new StorageViewHolder(view, aListener);
     }
+
+
 
     @Override
-    public void onBindViewHolder(@NonNull StorageViewHolder holder, int position) {
-        StorageSpace storage = this.storageList.get(position);
-        holder.tvStorageId.setText(storage.getStorageID());
-        holder.tvStorageFilled.setText("Filled: " + storage.getFilledPercentage()+"%");
+    protected void onBindViewHolder(@NonNull StorageViewHolder holder, int position, @NonNull StorageSpace model) {
+        if(this.isDeletable){
+            holder.deleteImage.setVisibility(View.VISIBLE);
+        }else{
+            holder.deleteImage.setVisibility(View.GONE);
+        }
+        holder.tvStorageId.setText(model.getStorageID());
+        String storageFilled = "Filled: " + model.getFilledPercentage()+"%";
+        holder.tvStorageFilled.setText(storageFilled);
+
     }
 
-    @Override
-    public int getItemCount() {
-        return storageList.size();
-    }
-
-    public static class StorageViewHolder extends RecyclerView.ViewHolder{
+     class StorageViewHolder extends RecyclerView.ViewHolder{
         public TextView tvStorageId;
         public TextView tvStorageFilled;
         public ImageView deleteImage;

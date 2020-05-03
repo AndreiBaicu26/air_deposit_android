@@ -88,4 +88,21 @@ public class Product implements Parcelable {
     public HashMap<String, Integer> getListOfPlacesDeposited() {
         return listOfPlacesDeposited;
     }
+
+    public void addProductToStorage(StorageSpace storage){
+        String storageID = storage.getStorageID();
+        if(this.listOfPlacesDeposited == null){
+            this.listOfPlacesDeposited = new HashMap<>();
+        }
+        //TODO check error when adding again to same storage
+        if(this.listOfPlacesDeposited.containsKey(storageID)){
+            this.listOfPlacesDeposited.put(storageID, this.listOfPlacesDeposited.get(storageID) + 1);
+        }else{
+            this.listOfPlacesDeposited.put(storageID,1);
+        }
+    }
+
+    public void setListOfPlacesDeposited(HashMap<String, Integer> listOfPlacesDeposited) {
+        this.listOfPlacesDeposited = listOfPlacesDeposited;
+    }
 }
