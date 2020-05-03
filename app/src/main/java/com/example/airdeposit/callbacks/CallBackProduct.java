@@ -1,4 +1,6 @@
-package com.example.airdeposit;
+package com.example.airdeposit.callbacks;
+
+import com.example.airdeposit.Product;
 
 public interface CallBackProduct {
 

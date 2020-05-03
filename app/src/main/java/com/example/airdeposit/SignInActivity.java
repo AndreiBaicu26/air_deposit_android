@@ -7,11 +7,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.BounceInterpolator;
@@ -20,6 +16,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.airdeposit.callbacks.CallbackEmployee;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -38,7 +38,7 @@ public class SignInActivity extends AppCompatActivity {
          boxes = findViewById(R.id.imgVBoxes);
          welcomeText = findViewById(R.id.tv_Welcome);
          btnEnter = findViewById(R.id.btnEnter);
-        empoloyeeIDText = findViewById(R.id.inputEmployeeId);
+         empoloyeeIDText = findViewById(R.id.inputEmployeeId);
 
          playAnimation();
 
@@ -66,6 +66,9 @@ public class SignInActivity extends AppCompatActivity {
 
 
     public void logIn(View view) {
+        if(empoloyeeIDText.getText().toString().length()== 0 || empoloyeeIDText.getText().toString().contains(" ")){
+            return;
+        }
         int employeeID =Integer.parseInt(empoloyeeIDText.getText().toString());
 
         final ObjectAnimator boxesAnimator = ObjectAnimator.ofFloat(boxes,"rotation", 360);
@@ -84,11 +87,10 @@ public class SignInActivity extends AppCompatActivity {
                 ObjectAnimator.ofFloat (boxes, "rotation", 0) .start ();
 
                 if (employee.getEmployeeID() == 0){
-                    Toast.makeText(getApplicationContext(), "Invalid id", Toast.LENGTH_SHORT).show();
-
+                    Snackbar.make(view,"Invalid ID", BaseTransientBottomBar.LENGTH_SHORT).show();
                 }
                 else{
-                    Toast.makeText(getApplicationContext(), employee.toString(), Toast.LENGTH_SHORT).show();
+
                     Intent it = new Intent(getApplicationContext(),MainActivity.class);
                     it.putExtra("employee",  employee);
                     startActivity(it);

@@ -13,4 +13,11 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="storage_deleted">Storage deleted</string>
+    <string name="scan_barcode">SCAN BARCODE</string>
+    <string name="game_details">Game Details</string>
+    <string name="add_to">Add to:</string>
+    <string name="size">Size</string>
 </resources>

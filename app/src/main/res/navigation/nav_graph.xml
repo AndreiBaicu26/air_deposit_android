@@ -11,13 +11,15 @@
         android:label="AddGameFragment"
         tools:layout="@layout/fragment_add_game"/>
     <fragment
-        android:id="@+id/addStorageFragment"
+        android:id="@+id/listOfStoragesFragment"
         android:name="com.example.airdeposit.fragments.ListOfStoragesFragment"
         android:label="AddStorageFragment"
         tools:layout="@layout/fragment_list_of_storages">
         <action
             android:id="@+id/action_addStorageFragment_to_addStorageFragment2"
-            app:destination="@id/addStorageFragment2" />
+            app:destination="@id/addStorageFragment2"
+            app:popUpTo="@id/listOfStoragesFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -34,13 +36,21 @@
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_homeFragment_to_addStorageFragment"
-            app:destination="@id/addStorageFragment" />
+            app:destination="@id/listOfStoragesFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_homeFragment_to_organiseFragment"
+            app:destination="@id/organiseFragment" />
     </fragment>
     <fragment
         android:id="@+id/organiseFragment"
         android:name="com.example.airdeposit.fragments.OrganiseFragment"
         android:label="OrganiseFragment"
         tools:layout="@layout/fragment_organise">
+        <action
+            android:id="@+id/action_organiseFragment_to_cameraScanFragment"
+            app:destination="@id/cameraScanFragment" />
     </fragment>
     <fragment
         android:id="@+id/refillFragment"
@@ -65,6 +75,9 @@
 
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_cameraScanFragment_to_organiseItemFragment"
+            app:destination="@id/organiseItemFragment" />
     </fragment>
     <fragment
 
@@ -74,11 +87,15 @@
         tools:layout="@layout/fragment_product_details" />
     <fragment
         android:id="@+id/addStorageFragment2"
-        android:name="com.example.airdeposit.AddStorageFragment"
+        android:name="com.example.airdeposit.fragments.AddStorageFragment"
         android:label="fragment_add_storage"
         tools:layout="@layout/fragment_add_storage" >
         <action
             android:id="@+id/action_addStorageFragment2_to_addStorageFragment"
-            app:destination="@id/addStorageFragment" />
+            app:destination="@id/listOfStoragesFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/organiseItemFragment"
+        android:name="com.example.airdeposit.fragments.OrganiseItemFragment"
+        android:label="OrganiseItemFragment" />
 </navigation>

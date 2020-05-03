@@ -37,8 +37,9 @@ public class HomeFragment extends Fragment {
         binding.btnScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//
-                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_cameraScanFragment);
+                Bundle b = new Bundle();
+                b.putString("from", "home");
+                Navigation.findNavController(v).navigate(R.id.cameraScanFragment,b);
             }
         });
 

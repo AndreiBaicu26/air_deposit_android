@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +16,10 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.example.airdeposit.CallBackProduct;
+import com.example.airdeposit.callbacks.CallBackProduct;
 import com.example.airdeposit.Firebase;
 import com.example.airdeposit.Product;
 import com.example.airdeposit.R;
-import com.example.airdeposit.databinding.FragmentHomeBinding;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -32,17 +29,17 @@ import static android.Manifest.permission.CAMERA;
 public class CameraScanFragment extends Fragment implements ZXingScannerView.ResultHandler {
     private static final int REQUEST_CAMERA = 1;
     private ZXingScannerView mScannerView;
-
+    String from;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mScannerView = new ZXingScannerView(getActivity());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkPermission()) {
 
-                    } else {
-                        requestPermission();
-                    }
-                }
+        from = getArguments().getString("from");
+        mScannerView = new ZXingScannerView(getActivity());
+        if (checkPermission()) {
+
+        } else {
+            requestPermission();
+        }
         return mScannerView;
     }
 
@@ -51,29 +48,29 @@ public class CameraScanFragment extends Fragment implements ZXingScannerView.Res
     public void handleResult(Result rawResult) {
         final String detectedText = rawResult.getText();
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Navigation.findNavController(getView()).navigate(R.id.action_cameraScanFragment_to_homeFragment);
+        builder.setPositiveButton("Ok", (dialog, which) -> Navigation.findNavController(getView()).navigate(R.id.action_cameraScanFragment_to_homeFragment));
 
-            }});
+        Firebase.getProduct(detectedText, product -> {
+            if (product == null) {
+                builder.setTitle("Could not detect product");
+                builder.setMessage("Speak to a manager");
 
-        Firebase.getProduct(detectedText, new CallBackProduct() {
-            @Override
-            public void onCallbackProduct(Product product) {
-                if (product == null) {
-                    builder.setTitle("Could not detect product");
-                    builder.setMessage("Speak to a manager");
+                AlertDialog alert = builder.create();
+                alert.show();
 
-                    AlertDialog alert = builder.create();
-                    alert.show();
-
-                } else {
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("product",product);
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("product",product);
+                if(from.equals("home")) {
                     Navigation.findNavController(getView()).navigate(R.id.action_cameraScanFragment_to_productDetailsFragment,bundle);
+                }else{
+                    Navigation.findNavController(getView()).navigate(R.id.organiseItemFragment,bundle);
                 }
-            }});
+
+
+
+            }
+        });
 
 
 

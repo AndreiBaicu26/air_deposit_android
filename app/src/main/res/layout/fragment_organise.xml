@@ -28,7 +28,7 @@
             android:maxWidth="192dp"
             android:layout_height="66dp"
             android:backgroundTint="@color/lightGreenMint"
-            android:text="SCAN BARCODE"
+            android:text="@string/scan_barcode"
             android:textSize="20sp"
             app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
