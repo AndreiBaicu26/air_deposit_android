@@ -48,7 +48,8 @@ public class CameraScanFragment extends Fragment implements ZXingScannerView.Res
     public void handleResult(Result rawResult) {
         final String detectedText = rawResult.getText();
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setPositiveButton("Ok", (dialog, which) -> Navigation.findNavController(getView()).navigate(R.id.action_cameraScanFragment_to_homeFragment));
+        builder.setPositiveButton("Ok", (dialog, which) ->
+                Navigation.findNavController(getView()).popBackStack());
 
         Firebase.getProduct(detectedText, product -> {
             if (product == null) {
@@ -64,7 +65,7 @@ public class CameraScanFragment extends Fragment implements ZXingScannerView.Res
                 if(from.equals("home")) {
                     Navigation.findNavController(getView()).navigate(R.id.action_cameraScanFragment_to_productDetailsFragment,bundle);
                 }else{
-                    Navigation.findNavController(getView()).navigate(R.id.organiseItemFragment,bundle);
+                    Navigation.findNavController(getView()).navigate(R.id.action_cameraScanFragment_to_organiseItemFragment,bundle);
                 }
 
 

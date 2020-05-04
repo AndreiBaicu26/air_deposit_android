@@ -89,14 +89,26 @@ public class Product implements Parcelable {
         return listOfPlacesDeposited;
     }
 
-    public void addProductToStorage(StorageSpace storage){
+    public void removeProductFromStorage(String storageID){
+        this.listOfPlacesDeposited.remove(storageID);
+    }
+
+    public void addProductToStorage(StorageSpace storage) throws Exception {
         String storageID = storage.getStorageID();
         if(this.listOfPlacesDeposited == null){
             this.listOfPlacesDeposited = new HashMap<>();
         }
-        //TODO check error when adding again to same storage
+
+        int productsDeposited =0;
+        for(String key : this.listOfPlacesDeposited.keySet()){
+            productsDeposited += this.listOfPlacesDeposited.get(key);
+        }
+
+        if(this.boh == productsDeposited) throw new Exception("No more "+ this.getNameOfProduct() + " products to store");
         if(this.listOfPlacesDeposited.containsKey(storageID)){
-            this.listOfPlacesDeposited.put(storageID, this.listOfPlacesDeposited.get(storageID) + 1);
+            int currentNumberInStorage = this.listOfPlacesDeposited.get(storageID);
+            currentNumberInStorage++;
+            this.listOfPlacesDeposited.put(storageID, currentNumberInStorage);
         }else{
             this.listOfPlacesDeposited.put(storageID,1);
         }

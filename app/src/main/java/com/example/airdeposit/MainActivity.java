@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.airdeposit.callbacks.CallBackProduct;
+import com.example.airdeposit.fragments.OrganiseFragment;
 import com.google.android.material.navigation.NavigationView;
 
 
@@ -98,11 +99,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
-
-
-
-
     public void imgPressSearchProduct(final View view) {
 
         if(productCodeId.getText().toString().length() > 0) {
@@ -115,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 }});
 
+
             Firebase.getProduct(productCode, new CallBackProduct() {
                 @Override
                 public void onCallbackProduct(Product product) {
@@ -126,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         alert.show();
 
                     } else {
+
                         Bundle bundle = new Bundle();
                         bundle.putParcelable("product",product);
                         controller.navigate(R.id.action_homeFragment_to_productDetailsFragment,bundle);

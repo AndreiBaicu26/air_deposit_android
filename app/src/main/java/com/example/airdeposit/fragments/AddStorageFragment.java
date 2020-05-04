@@ -20,6 +20,8 @@ import com.example.airdeposit.callbacks.CallbackAddStorage;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Objects;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,9 +57,9 @@ public class AddStorageFragment extends Fragment {
 
                             Toast.makeText(getContext(),"Storage with this ID already exists", Toast.LENGTH_SHORT).show();
                         }else{
-                            Snackbar.make(getView(),"Storage added", BaseTransientBottomBar.LENGTH_SHORT).show();
+                            Snackbar.make(requireView(),"Storage added", BaseTransientBottomBar.LENGTH_SHORT).show();
 
-                            Navigation.findNavController(getView()).navigate(R.id.listOfStoragesFragment);
+                            Navigation.findNavController(getView()).navigate(R.id.action_addStorageFragment2_to_addStorageFragment);
                         }
                     }
                 });

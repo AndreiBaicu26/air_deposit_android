@@ -101,36 +101,55 @@ public class StorageSpace implements Parcelable {
     }
 
     public void addMediumProduct(){
-        this.maxBig -=1;
+        if(this.maxMedium % 2 == 0) {
+            this.maxBig -= 1;
+        }
         this.maxMedium -=1;
-        this.maxSmall -= 2;
+        this.maxSmall -=2;
+
+
     }
 
     public void addSmallProduct(){
-        this.maxBig -=1;
-        this.maxMedium -=1;
-        this.maxSmall -= 1;
+        if(this.maxSmall % 4 == 0) {
+            this.maxBig -= 1;
+            this.maxMedium -=1;
+            this.maxSmall -=1;
+        }else if(this.maxSmall % 2 ==0){
+            this.maxMedium -=1;
+            this.maxSmall -=1;
+        }else{
+            this.maxSmall -=1;
+        }
+
+
     }
 
-   public void storeProduct(Product p){
+    //TODO -- maybe error when searching for p
+   public void storeProduct(Product p) throws Exception {
         if(productExists(p)){
-            this.storedProducts.put(p.getNameOfProduct(),this.storedProducts.get(p.getNameOfProduct()+1));
+            int itemsStored = this.storedProducts.get(p.getNameOfProduct());
+            ++itemsStored;
+            this.storedProducts.put(p.getNameOfProduct(), itemsStored);
         }else {
             this.storedProducts.put(p.getNameOfProduct(),1);
         }
 
         if(p.getSize().equals("small")){
+            if(this.maxSmall == 0) throw new Exception("No more space for small sized games");
             addSmallProduct();
         }else if(p.getSize().equals("medium")){
+            if(this.maxMedium == 0) throw new Exception("No more space for medium sized games");
             addMediumProduct();
         }else{
+            if(this.maxBig == 0) throw new Exception("No more space for big sized games");
             addBigProduct();
         }
     }
 
     private boolean productExists(Product p){
         if(this.storedProducts == null){
-            this.storedProducts = new HashMap<>();
+            this.storedProducts = new HashMap<String, Integer>();
         }
         if(this.storedProducts.containsKey(p.getNameOfProduct())){
             return true;

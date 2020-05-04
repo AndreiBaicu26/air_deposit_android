@@ -108,7 +108,9 @@ public class ListOfStoragesFragment extends Fragment {
        adapter.setOnItemClickListener(new StorageAdapter.OnItemClickListener() {
            @Override
            public void onItemClick(int position) {
-
+                    Bundle b = new Bundle();
+                    b.putParcelable("storage",adapter.getItem(position));
+                    Navigation.findNavController(getView()).navigate(R.id.action_listOfStoragesFragment_to_storageDetailsFragment,b);
            }
 
            @Override

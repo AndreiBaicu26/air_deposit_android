@@ -69,22 +69,30 @@ public class OrganiseItemFragment extends Fragment {
 
     private void setUpViews(Product product) {
         if(product != null){
-            String depositedIn = binder.tvDepositedIn.getText().toString();
+
             String productName = "Name: " +product.getNameOfProduct();
             String productSize = "Size: " + product.getSize().toUpperCase();
             binder.tvOrganiseItemName.setText(productName);
             binder.tvSize.setText(productSize);
-            if(product.getListOfPlacesDeposited() == null) {
-                binder.tvDepositedIn.setText(depositedIn + " - ");
-            }else{
-                StringBuilder listOfDeposited = new StringBuilder();
-                listOfDeposited.append(depositedIn);
-                for(String storage : product.getListOfPlacesDeposited().keySet()){
-                    listOfDeposited.append("  ").append(storage);
-                }
-                String result = listOfDeposited.toString() ;
-                binder.tvDepositedIn.setText(result);
+
+            updateDepositedInField(product);
+        }
+    }
+
+    private void updateDepositedInField(Product product){
+        binder.tvDepositedIn.setText(R.string.deposited_in);
+        String depositedIn = binder.tvDepositedIn.getText().toString();
+        if(product.getListOfPlacesDeposited() == null) {
+
+            binder.tvDepositedIn.setText(depositedIn + " - ");
+        }else{
+            StringBuilder listOfDeposited = new StringBuilder();
+            listOfDeposited.append(depositedIn);
+            for(String storage : product.getListOfPlacesDeposited().keySet()){
+                listOfDeposited.append("  ").append(storage);
             }
+            String result = listOfDeposited.toString() ;
+            binder.tvDepositedIn.setText(result);
         }
     }
 
@@ -122,15 +130,25 @@ public class OrganiseItemFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add " + product.getNameOfProduct() + " to " +storage.getStorageID() );
         builder.setPositiveButton("Yes", (dialogInterface, i) -> {
-           storage.storeProduct(product);
-           product.addProductToStorage(storage);
-           Firebase.addProductToStorage(storage, product, message -> Snackbar.make(getView(),message, BaseTransientBottomBar.LENGTH_SHORT).show());
+
+            assignProductToStorage(storage);
 
         });
         builder.setNegativeButton("No", ((dialogInterface, i) -> {
 
         }));
         builder.create().show();
+    }
+
+    private void assignProductToStorage(StorageSpace storage) {
+        try {
+            storage.storeProduct(product);
+            product.addProductToStorage(storage);
+            Firebase.addProductToStorage(storage, product, message -> Snackbar.make(getView(), message, BaseTransientBottomBar.LENGTH_SHORT).show());
+            updateDepositedInField(product);
+        }catch (Exception e) {
+            Snackbar.make(getView(),e.getMessage(),BaseTransientBottomBar.LENGTH_SHORT).show();
+        }
     }
 
 

@@ -39,7 +39,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Bundle b = new Bundle();
                 b.putString("from", "home");
-                Navigation.findNavController(v).navigate(R.id.cameraScanFragment,b);
+                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_cameraScanFragment,b);
             }
         });
 
@@ -53,12 +53,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
     }
-
-
-
 
     @Override
     public void onDestroy() {

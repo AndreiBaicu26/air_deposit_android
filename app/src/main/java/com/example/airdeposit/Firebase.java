@@ -43,11 +43,12 @@ public class Firebase  {
                     if(task.getResult().exists()){
                             DocumentSnapshot data = task.getResult();
 
-                            Product product = new Product(data.getString("documentId"),data.getString("name"),
+                            Product product = new Product(data.getString("documentId"), data.getString("name"),
                                     Integer.parseInt(data.getString("boh")),
                                     Integer.parseInt(data.getString("foh")),
                                     Integer.parseInt(data.getString("noOfPlayers")),
                                     data.getString("size"));
+
                             HashMap<String,Integer> hash = (HashMap<String, Integer>)data.get("placesDeposited");
                         if (hash == null) {
                             product.setListOfPlacesDeposited(null);
@@ -154,4 +155,23 @@ public class Firebase  {
         return query;
 
     }
+
+    public static Query queryForProductInStorageRecyclerView(String storageID){
+        Query query = db.collection("products").whereEqualTo("size","medium").orderBy("documentId", Query.Direction.ASCENDING);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Log.d("firestore",task.getResult().toString());
+            }
+        }).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                Log.d("firestore","merge");
+            }
+        });
+        return query;
+
+    }
+
+
 }
