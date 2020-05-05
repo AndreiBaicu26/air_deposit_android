@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.airdeposit.Product;
-import com.example.airdeposit.R;
-import com.example.airdeposit.databinding.FragmentHomeBinding;
 import com.example.airdeposit.databinding.FragmentProductDetailsBinding;
 
 
@@ -27,8 +25,8 @@ public class ProductDetailsFragment extends Fragment {
 
         Product product = getArguments().getParcelable("product");
 
-        binding.tvNameOfProduct.setText(product.getNameOfProduct());
-        binding.tvbarCode.setText("Code: " + product.getProductID());
+        binding.tvNameOfProduct.setText(product.getName());
+        binding.tvbarCode.setText("Code: " + product.getDocumentID());
         binding.tvBOH.setText("BOH: " + product.getBoh());
         binding.tvFOH.setText("FOH: " + product.getFoh());
         binding.tvSize.setText("Size: " + product.getSize());

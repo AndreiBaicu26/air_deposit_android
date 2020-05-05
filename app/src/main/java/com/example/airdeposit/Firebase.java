@@ -7,23 +7,19 @@ import androidx.annotation.NonNull;
 import com.example.airdeposit.callbacks.CallBackProduct;
 import com.example.airdeposit.callbacks.CallbackAddStorage;
 import com.example.airdeposit.callbacks.CallbackEmployee;
-import com.example.airdeposit.callbacks.CallbackGetStorages;
 import com.example.airdeposit.callbacks.CallbackProductAddedToStorage;
+import com.example.airdeposit.callbacks.CallbackSuccessMessage;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Firebase  {
 
@@ -43,20 +39,10 @@ public class Firebase  {
                     if(task.getResult().exists()){
                             DocumentSnapshot data = task.getResult();
 
-                            Product product = new Product(data.getString("documentId"), data.getString("name"),
-                                    Integer.parseInt(data.getString("boh")),
-                                    Integer.parseInt(data.getString("foh")),
-                                    Integer.parseInt(data.getString("noOfPlayers")),
-                                    data.getString("size"));
+                            Product p = data.toObject(Product.class);
 
-                            HashMap<String,Integer> hash = (HashMap<String, Integer>)data.get("placesDeposited");
-                        if (hash == null) {
-                            product.setListOfPlacesDeposited(null);
-                        } else {
-                            product.setListOfPlacesDeposited(hash);
-                        }
 
-                        callBackProduct.onCallbackProduct(product);
+                        callBackProduct.onCallbackProduct(p);
 
                     }else{
                         callBackProduct.onCallbackProduct(null);
@@ -99,7 +85,25 @@ public class Firebase  {
 
     }
 
+    public static void emptyStorage(StorageSpace storage, final CallbackSuccessMessage callbackSuccessMessage) {
+        db.collection("storageSpaces").document(storage.getStorageID())
+                .update("storedProducts", storage.getStoredProducts(), "maxBig", storage.getMaxBig(),
+                        "maxMedium", storage.getMaxMedium(),
+                        "maxSmall", storage.getMaxSmall())
+                .addOnSuccessListener(aVoid -> callbackSuccessMessage.onSuccessMessage("Storage is now empty"));
 
+    }
+
+    public static void removeProductFromStorage(Product product){
+            db.collection("products").document(product.getDocumentID()).update("placesDeposited", product.getPlacesDeposited());
+
+    }
+    public  static void updateStorage(StorageSpace storage){
+        db.collection("storageSpaces").document(storage.getStorageID())
+                .update("storedProducts", storage.getStoredProducts(), "maxBig", storage.getMaxBig(),
+                        "maxMedium", storage.getMaxMedium(),
+                        "maxSmall", storage.getMaxSmall());
+    }
 
     public static void addStorageSpace(String storageID, final CallbackAddStorage callbackAddStorage){
 
@@ -144,7 +148,7 @@ public class Firebase  {
             callback.onProductAddedToStorage("Error while storing product");
         });
 
-        db.collection("products").document(product.getProductID()).update("placesDeposited", product.getListOfPlacesDeposited())
+        db.collection("products").document(product.getDocumentID()).update("placesDeposited", product.getPlacesDeposited())
                 .addOnFailureListener(aVoid->{
                    Log.e("Firestore", "Could not add Product to storage");
                 });
@@ -152,23 +156,38 @@ public class Firebase  {
 
     public static Query queryForStoragesRecyclerView(){
         Query query = db.collection("storageSpaces").orderBy("storageID", Query.Direction.ASCENDING);
+
+
+
+
         return query;
 
     }
 
     public static Query queryForProductInStorageRecyclerView(String storageID){
-        Query query = db.collection("products").whereEqualTo("size","medium").orderBy("documentId", Query.Direction.ASCENDING);
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                Log.d("firestore",task.getResult().toString());
-            }
-        }).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                Log.d("firestore","merge");
-            }
-        });
+        String path = "placesDeposited."+storageID;
+        Query query = db.collection("products").whereGreaterThan( "placesDeposited."+storageID,0);
+//        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    if(!task.getResult().isEmpty()) {
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            Log.d("firreeeeeeeee got", document.getData().toString());
+//
+//                        }
+//                    }else
+//                    {
+//                        Log.d("firreeeeeeeee empty", task.getResult().toString());
+//
+//                    }
+//                } else {
+//                    Log.d("firreeeeeeeee", task.getException().toString());
+//
+//                }
+//            }
+//        });
+
         return query;
 
     }

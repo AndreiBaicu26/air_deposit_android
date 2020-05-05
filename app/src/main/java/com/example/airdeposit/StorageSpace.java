@@ -33,6 +33,8 @@ public class StorageSpace implements Parcelable {
         maxSmall = in.readInt();
     }
 
+
+
     public static final Creator<StorageSpace> CREATOR = new Creator<StorageSpace>() {
         @Override
         public StorageSpace createFromParcel(Parcel in) {
@@ -125,14 +127,23 @@ public class StorageSpace implements Parcelable {
 
     }
 
-    //TODO -- maybe error when searching for p
+
+    public void emptyStorage(){
+        this.storedProducts.clear();
+
+        this.maxBig = 10;
+        this.maxMedium = 20;
+        this.maxSmall = 40;
+
+    }
+
    public void storeProduct(Product p) throws Exception {
         if(productExists(p)){
-            int itemsStored = this.storedProducts.get(p.getNameOfProduct());
+            int itemsStored = this.storedProducts.get(p.getName());
             ++itemsStored;
-            this.storedProducts.put(p.getNameOfProduct(), itemsStored);
+            this.storedProducts.put(p.getName(), itemsStored);
         }else {
-            this.storedProducts.put(p.getNameOfProduct(),1);
+            this.storedProducts.put(p.getName(),1);
         }
 
         if(p.getSize().equals("small")){
@@ -151,13 +162,50 @@ public class StorageSpace implements Parcelable {
         if(this.storedProducts == null){
             this.storedProducts = new HashMap<String, Integer>();
         }
-        if(this.storedProducts.containsKey(p.getNameOfProduct())){
+        if(this.storedProducts.containsKey(p.getName())){
             return true;
         }else{
             return false;
         }
     }
 
+    public void removeProductFromStorage(Product product) throws Exception {
+        if(product.getSize().equals("small")){
+            if(this.maxSmall == 40) throw new Exception("Storage is empty already");
+            removeSmallProduct();
+        }else if(product.getSize().equals("medium")){
+            if(this.maxMedium == 20) throw new Exception("Storage is empty already");
+          removeMediumProduct();
+        }else{
+            if(this.maxBig == 10) throw new Exception("Storage is empty already");
+            removeBigProduct();
+        }
+
+    }
+
+    private void removeMediumProduct() {
+        this.maxMedium+=1;
+        if(this.maxMedium % 2 == 0) {
+            this.maxBig += 1;
+        }
+        this.maxSmall +=2;
+
+    }
+
+    private void removeBigProduct() {
+        this.maxBig +=1;
+        this.maxMedium +=2;
+        this.maxSmall+=4;
+    }
+
+    private void removeSmallProduct() {
+        this.maxSmall +=1;
+        if(this.maxSmall % 2 == 0) {
+            this.maxMedium +=1;
+        }else if(this.maxSmall % 4 ==0) {
+            this.maxBig += 1;
+        }
+    }
 
     @Override
     public int describeContents() {

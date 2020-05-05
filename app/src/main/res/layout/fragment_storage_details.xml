@@ -10,7 +10,7 @@ android:layout_width="match_parent"
 tools:context=".fragments.StorageDetailsFragment">
 
     <ImageView
-        android:id="@+id/imgVItem"
+        android:id="@+id/imgVitem"
         android:layout_width="74dp"
         android:layout_height="79dp"
         android:layout_marginTop="24dp"
@@ -18,7 +18,8 @@ tools:context=".fragments.StorageDetailsFragment">
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+      />
 
     <Button
         android:id="@+id/button"
@@ -44,7 +45,7 @@ tools:context=".fragments.StorageDetailsFragment">
         app:layout_constraintBottom_toTopOf="@+id/tvFilledStorage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgVItem"
+        app:layout_constraintTop_toBottomOf="@+id/imgVitem"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -65,10 +66,10 @@ tools:context=".fragments.StorageDetailsFragment">
         android:id="@+id/rvItemsInStorage"
         android:layout_width="380dp"
         android:layout_height="316dp"
-        android:layout_marginStart="23dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="8dp"
-        android:background="@color/backGround"
+        android:layout_marginEnd="24dp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"

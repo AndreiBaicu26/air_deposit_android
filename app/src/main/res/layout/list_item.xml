@@ -16,7 +16,8 @@
     android:layout_height="35dp"
         android:layout_weight="1"
         android:layout_gravity="center"
-    app:srcCompat="@drawable/ic_icon_map_storage" />
+    app:srcCompat="@drawable/ic_icon_map_storage"
+       />
 
     <LinearLayout
         android:paddingBottom="10dp"

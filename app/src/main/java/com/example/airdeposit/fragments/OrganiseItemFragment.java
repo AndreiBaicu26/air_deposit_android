@@ -1,36 +1,29 @@
 package com.example.airdeposit.fragments;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.telephony.mbms.MbmsErrors;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.airdeposit.Firebase;
 import com.example.airdeposit.Product;
 import com.example.airdeposit.R;
 import com.example.airdeposit.StorageAdapter;
 import com.example.airdeposit.StorageSpace;
-import com.example.airdeposit.callbacks.CallbackGetStorages;
-import com.example.airdeposit.callbacks.CallbackProductAddedToStorage;
 import com.example.airdeposit.databinding.FragmentOrganiseItemBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -46,6 +39,7 @@ public class OrganiseItemFragment extends Fragment {
     private ArrayList<StorageSpace> list;
     private FragmentOrganiseItemBinding binder;
     View view;
+
     public OrganiseItemFragment() {
 
     }
@@ -70,7 +64,7 @@ public class OrganiseItemFragment extends Fragment {
     private void setUpViews(Product product) {
         if(product != null){
 
-            String productName = "Name: " +product.getNameOfProduct();
+            String productName = "Name: " +product.getName();
             String productSize = "Size: " + product.getSize().toUpperCase();
             binder.tvOrganiseItemName.setText(productName);
             binder.tvSize.setText(productSize);
@@ -82,13 +76,13 @@ public class OrganiseItemFragment extends Fragment {
     private void updateDepositedInField(Product product){
         binder.tvDepositedIn.setText(R.string.deposited_in);
         String depositedIn = binder.tvDepositedIn.getText().toString();
-        if(product.getListOfPlacesDeposited() == null) {
+        if(product.getPlacesDeposited() == null) {
 
             binder.tvDepositedIn.setText(depositedIn + " - ");
         }else{
             StringBuilder listOfDeposited = new StringBuilder();
             listOfDeposited.append(depositedIn);
-            for(String storage : product.getListOfPlacesDeposited().keySet()){
+            for(String storage : product.getPlacesDeposited().keySet()){
                 listOfDeposited.append("  ").append(storage);
             }
             String result = listOfDeposited.toString() ;
@@ -113,7 +107,7 @@ public class OrganiseItemFragment extends Fragment {
 
         adapter.setOnItemClickListener(new StorageAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void onItemClick(int position, TextView boxImg) {
                 createAlertDialogForAddingToStorage(adapter.getItem(position),position);
             }
 
@@ -124,11 +118,11 @@ public class OrganiseItemFragment extends Fragment {
         });
     }
 
-    //TODO Remove product from storage space when removing storage space;
+
     private void createAlertDialogForAddingToStorage(StorageSpace storage, int position) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Add " + product.getNameOfProduct() + " to " +storage.getStorageID() );
+        builder.setTitle("Add " + product.getName() + " to " +storage.getStorageID() );
         builder.setPositiveButton("Yes", (dialogInterface, i) -> {
 
             assignProductToStorage(storage);

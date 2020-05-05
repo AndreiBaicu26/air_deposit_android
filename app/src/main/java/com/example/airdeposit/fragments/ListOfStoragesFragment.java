@@ -7,37 +7,28 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.FragmentNavigator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.airdeposit.Firebase;
 import com.example.airdeposit.R;
 import com.example.airdeposit.StorageAdapter;
 import com.example.airdeposit.StorageSpace;
-import com.example.airdeposit.callbacks.CallbackGetStorages;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.firebase.ui.firestore.paging.FirestorePagingOptions;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.dialog.MaterialDialogs;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.api.LogDescriptor;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ListOfStoragesFragment extends Fragment {
     private  RecyclerView recyclerView;
@@ -107,10 +98,16 @@ public class ListOfStoragesFragment extends Fragment {
 
        adapter.setOnItemClickListener(new StorageAdapter.OnItemClickListener() {
            @Override
-           public void onItemClick(int position) {
+           public void onItemClick(int position, TextView boxImg) {
                     Bundle b = new Bundle();
                     b.putParcelable("storage",adapter.getItem(position));
-                    Navigation.findNavController(getView()).navigate(R.id.action_listOfStoragesFragment_to_storageDetailsFragment,b);
+
+
+                    FragmentNavigator.Extras extras = new FragmentNavigator.Extras.Builder()
+                            .addSharedElement(boxImg,adapter.getItem(position).getStorageID())
+                            .build();
+
+                    Navigation.findNavController(getView()).navigate(R.id.action_listOfStoragesFragment_to_storageDetailsFragment,b,null,extras);
            }
 
            @Override

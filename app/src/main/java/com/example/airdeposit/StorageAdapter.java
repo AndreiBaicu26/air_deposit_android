@@ -11,9 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.auth.api.signin.internal.Storage;
-
-import java.util.ArrayList;
 
 public class StorageAdapter extends FirestoreRecyclerAdapter<StorageSpace,StorageAdapter.StorageViewHolder> {
 
@@ -28,7 +25,7 @@ public class StorageAdapter extends FirestoreRecyclerAdapter<StorageSpace,Storag
     }
 
     public interface OnItemClickListener{
-        void onItemClick(int position);
+        void onItemClick(int position, TextView boxImg);
         void onDeleteItemClick(int position);
     }
 
@@ -48,6 +45,10 @@ public class StorageAdapter extends FirestoreRecyclerAdapter<StorageSpace,Storag
 
     @Override
     protected void onBindViewHolder(@NonNull StorageViewHolder holder, int position, @NonNull StorageSpace model) {
+
+
+        holder.tvStorageId.setTransitionName(model.getStorageID());
+
         if(this.isDeletable){
             holder.deleteImage.setVisibility(View.VISIBLE);
         }else{
@@ -63,6 +64,7 @@ public class StorageAdapter extends FirestoreRecyclerAdapter<StorageSpace,Storag
         public TextView tvStorageId;
         public TextView tvStorageFilled;
         public ImageView deleteImage;
+        public ImageView boxImg;
 
         public StorageViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
@@ -70,12 +72,12 @@ public class StorageAdapter extends FirestoreRecyclerAdapter<StorageSpace,Storag
             tvStorageId = itemView.findViewById(R.id.tvIdStorage);
             tvStorageFilled = itemView.findViewById(R.id.tvFilledStorage);
             deleteImage = itemView.findViewById(R.id.imgRemove);
-
+            boxImg = itemView.findViewById(R.id.imgVItem);
             itemView.setOnClickListener(view -> {
                 if(listener !=null){
                     int position = getAdapterPosition();
                     if(position != RecyclerView.NO_POSITION){
-                        listener.onItemClick(position);
+                        listener.onItemClick(position,tvStorageId);
                     }
                 }
             });

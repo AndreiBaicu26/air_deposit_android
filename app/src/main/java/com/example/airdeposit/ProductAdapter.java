@@ -11,10 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-import java.util.HashMap;
 
-
-public class ProductAdapter extends FirestoreRecyclerAdapter<Product,ProductAdapter.ProductViewHolder> {
+public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAdapter.ProductViewHolder> {
     StorageSpace currentStorage;
 
     public ProductAdapter(@NonNull FirestoreRecyclerOptions<Product> options, StorageSpace s) {
@@ -22,22 +20,26 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product,ProductAdap
         this.currentStorage = s;
     }
 
+
+
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_list_item,parent,false);
+
         return new ProductViewHolder(v);
     }
 
     @Override
     protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull Product model) {
-        Integer productQuantity = model.getListOfPlacesDeposited().get(currentStorage.getStorageID());
-        String productName = model.getNameOfProduct();
+        Integer productQuantity = model.getPlacesDeposited().get(currentStorage.getStorageID());
+        String productName = model.getName();
         String name = "Product name: " + productName;
         String quantity = "Quantity: " + productQuantity;
         holder.productName.setText(name);
         holder.productQuantity.setText(quantity);
     }
+
 
 
     class ProductViewHolder extends RecyclerView.ViewHolder{

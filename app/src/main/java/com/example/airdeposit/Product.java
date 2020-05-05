@@ -7,30 +7,56 @@ import java.util.HashMap;
 
 public class Product implements Parcelable {
 
-    private String productID;
-    private String nameOfProduct;
+    private String documentId;
+    private String name;
     private int boh;
     private int foh;
-    private int maxPlayers;
+    private int noOfPlayers;
     private String size;
-    private HashMap<String, Integer> listOfPlacesDeposited;
+    private HashMap<String, Integer> placesDeposited;
 
-    public Product(String productID, String nameOfProduct, int boh, int foh, int maxPlayers, String size) {
-        this.productID = productID;
-        this.nameOfProduct = nameOfProduct;
+    public Product(){ }
+
+    public void setDocumentID(String documentID) {
+        this.documentId = documentID;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBoh(int boh) {
+        this.boh = boh;
+    }
+
+    public void setFoh(int foh) {
+        this.foh = foh;
+    }
+
+    public void setNoOfPlayers(int noOfPlayers) {
+        this.noOfPlayers = noOfPlayers;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public Product(String documentID, String nameOfProduct, int boh, int foh, int noOfPlayers, String size) {
+        this.documentId = documentID;
+        this.name = nameOfProduct;
         this.boh = boh;
         this.foh = foh;
-        this.maxPlayers = maxPlayers;
+        this.noOfPlayers = noOfPlayers;
         this.size = size;
     }
 
 
     protected Product(Parcel in) {
-        productID = in.readString();
-        nameOfProduct = in.readString();
+        documentId = in.readString();
+        name = in.readString();
         boh = in.readInt();
         foh = in.readInt();
-        maxPlayers = in.readInt();
+        noOfPlayers = in.readInt();
         size = in.readString();
     }
 
@@ -53,20 +79,20 @@ public class Product implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(productID);
-        dest.writeString(nameOfProduct);
+        dest.writeString(documentId);
+        dest.writeString(name);
         dest.writeInt(boh);
         dest.writeInt(foh);
-        dest.writeInt(maxPlayers);
+        dest.writeInt(noOfPlayers);
         dest.writeString(size);
     }
 
-    public String getProductID() {
-        return productID;
+    public String getDocumentID() {
+        return documentId;
     }
 
-    public String getNameOfProduct() {
-        return nameOfProduct;
+    public String getName() {
+        return name;
     }
 
     public int getBoh() {
@@ -77,44 +103,48 @@ public class Product implements Parcelable {
         return foh;
     }
 
-    public int getMaxPlayers() {
-        return maxPlayers;
+    public int getNoOfPlayers() {
+        return noOfPlayers;
     }
 
     public String getSize() {
         return size;
     }
 
-    public HashMap<String, Integer> getListOfPlacesDeposited() {
-        return listOfPlacesDeposited;
+    public HashMap<String, Integer> getPlacesDeposited() {
+        return placesDeposited;
     }
 
     public void removeProductFromStorage(String storageID){
-        this.listOfPlacesDeposited.remove(storageID);
+        this.placesDeposited.remove(storageID);
+
     }
 
     public void addProductToStorage(StorageSpace storage) throws Exception {
         String storageID = storage.getStorageID();
-        if(this.listOfPlacesDeposited == null){
-            this.listOfPlacesDeposited = new HashMap<>();
+
+        if(this.placesDeposited == null){
+            this.placesDeposited = new HashMap<>();
         }
 
         int productsDeposited =0;
-        for(String key : this.listOfPlacesDeposited.keySet()){
-            productsDeposited += this.listOfPlacesDeposited.get(key);
+        for(String key : this.placesDeposited.keySet()){
+            productsDeposited += this.placesDeposited.get(key);
         }
 
-        if(this.boh == productsDeposited) throw new Exception("No more "+ this.getNameOfProduct() + " products to store");
-        if(this.listOfPlacesDeposited.containsKey(storageID)){
-            int currentNumberInStorage = this.listOfPlacesDeposited.get(storageID);
+        if(this.boh == productsDeposited) throw new Exception("No more "+ this.getName() + " products to store");
+        if(this.placesDeposited.containsKey(storageID)){
+            int currentNumberInStorage = this.placesDeposited.get(storageID);
             currentNumberInStorage++;
-            this.listOfPlacesDeposited.put(storageID, currentNumberInStorage);
+            this.placesDeposited.put(storageID, currentNumberInStorage);
         }else{
-            this.listOfPlacesDeposited.put(storageID,1);
+            this.placesDeposited.put(storageID,1);
         }
     }
 
-    public void setListOfPlacesDeposited(HashMap<String, Integer> listOfPlacesDeposited) {
-        this.listOfPlacesDeposited = listOfPlacesDeposited;
+    public void setPlacesDeposited(HashMap<String, Integer> placesDeposited) {
+        this.placesDeposited = placesDeposited;
     }
+
+
 }

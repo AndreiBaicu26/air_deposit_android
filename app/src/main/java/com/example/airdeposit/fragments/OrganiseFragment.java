@@ -47,31 +47,27 @@ public class OrganiseFragment extends Fragment {
         if(input.getText().toString().length() > 0) {
             String productCode = input.getText().toString();
             final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+            builder.setPositiveButton("Ok", (dialog, which) -> {
 
 
-                }});
+            });
 
 
-            Firebase.getProduct(productCode, new CallBackProduct() {
-                @Override
-                public void onCallbackProduct(Product product) {
-                    if (product == null) {
-                        builder.setTitle("Could not detect product");
-                        builder.setMessage("Speak to a manager");
+            Firebase.getProduct(productCode, product -> {
+                if (product == null) {
+                    builder.setTitle("Could not detect product");
+                    builder.setMessage("Speak to a manager");
 
-                        AlertDialog alert = builder.create();
-                        alert.show();
+                    AlertDialog alert = builder.create();
+                    alert.show();
 
-                    } else {
-
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable("product",product);
-                        Navigation.findNavController(getView()).navigate(R.id.action_organiseFragment_to_organiseItemFragment,bundle);
-                    }
-                }});
+                } else {
+                    input.setText("");
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("product",product);
+                    Navigation.findNavController(getView()).navigate(R.id.action_organiseFragment_to_organiseItemFragment,bundle);
+                }
+            });
 
         }
 
