@@ -21,8 +21,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.airdeposit.callbacks.CallBackProduct;
-import com.example.airdeposit.fragments.OrganiseFragment;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.DocumentReference;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener

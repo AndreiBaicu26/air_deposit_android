@@ -16,11 +16,15 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.example.airdeposit.Sale;
 import com.example.airdeposit.callbacks.CallBackProduct;
 import com.example.airdeposit.Firebase;
 import com.example.airdeposit.Product;
 import com.example.airdeposit.R;
 import com.google.zxing.Result;
+
+import java.sql.Time;
+import java.util.Date;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -35,6 +39,7 @@ public class CameraScanFragment extends Fragment implements ZXingScannerView.Res
 
         from = getArguments().getString("from");
         mScannerView = new ZXingScannerView(getActivity());
+
         if (checkPermission()) {
 
         } else {
@@ -48,33 +53,55 @@ public class CameraScanFragment extends Fragment implements ZXingScannerView.Res
     public void handleResult(Result rawResult) {
         final String detectedText = rawResult.getText();
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
         builder.setPositiveButton("Ok", (dialog, which) ->
                 Navigation.findNavController(getView()).popBackStack());
 
-        Firebase.getProduct(detectedText, product -> {
-            if (product == null) {
-                builder.setTitle("Could not detect product");
-                builder.setMessage("Speak to a manager");
+        if(from.equals("organise")|| from.equals("home")) {
+            Firebase.getProduct(detectedText, product -> {
+                if (product == null) {
+                    builder.setTitle("Could not detect product");
+                    builder.setMessage("Speak to a manager");
 
-                AlertDialog alert = builder.create();
-                alert.show();
+                    AlertDialog alert = builder.create();
+                    alert.show();
 
-            } else {
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("product",product);
-                if(from.equals("home")) {
-                    Navigation.findNavController(getView()).navigate(R.id.action_cameraScanFragment_to_productDetailsFragment,bundle);
-                }else{
-                    Navigation.findNavController(getView()).navigate(R.id.action_cameraScanFragment_to_organiseItemFragment,bundle);
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("product", product);
+                    if (from.equals("home")) {
+                        Navigation.findNavController(getView()).navigate(R.id.action_cameraScanFragment_to_productDetailsFragment, bundle);
+                    } else {
+                        Navigation.findNavController(getView()).navigate(R.id.action_cameraScanFragment_to_organiseItemFragment, bundle);
+                    }
+
+
                 }
+            });
 
+        }else
+            if(from.equals("sale")){
+            Firebase.getProduct(detectedText, product -> {
+                if (product == null) {
+                    builder.setTitle("Could not detect product");
+                    builder.setMessage("Speak to a manager");
 
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } else {
+                    if(product.getFoh()==0){
+                        //TODO alert no more products in front
+                    }else{
+                        Sale s = new Sale(product.getReference(),false);
+                        Firebase.saleProduct(product);
+                        Firebase.createSale(s);
+                        builder.setTitle("Product sold");
+                        builder.create().show();
+                    }
 
-            }
-        });
-
-
-
+                }
+            });
+        }
 
     }
 

@@ -3,10 +3,13 @@ package com.example.airdeposit;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.firestore.DocumentReference;
+
 import java.util.HashMap;
 
 public class Product implements Parcelable {
 
+    private DocumentReference reference;
     private String documentId;
     private String name;
     private int boh;
@@ -20,6 +23,7 @@ public class Product implements Parcelable {
     public void setDocumentID(String documentID) {
         this.documentId = documentID;
     }
+
 
     public void setName(String name) {
         this.name = name;
@@ -50,6 +54,13 @@ public class Product implements Parcelable {
         this.size = size;
     }
 
+    public DocumentReference getReference() {
+        return reference;
+    }
+
+    public void setReference(DocumentReference reference) {
+        this.reference = reference;
+    }
 
     protected Product(Parcel in) {
         documentId = in.readString();

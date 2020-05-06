@@ -1,14 +1,11 @@
 package com.example.airdeposit.fragments;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,30 +14,22 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.ContactsContract;
 import android.text.InputType;
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.airdeposit.Firebase;
 import com.example.airdeposit.Product;
-import com.example.airdeposit.ProductAdapter;
-import com.example.airdeposit.R;
-import com.example.airdeposit.StorageAdapter;
+import com.example.airdeposit.adapters.ProductAdapter;
 import com.example.airdeposit.StorageSpace;
-import com.example.airdeposit.callbacks.CallbackSuccessMessage;
 import com.example.airdeposit.databinding.FragmentStorageDetailsBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.common.collect.HashMultimap;
 import com.google.firebase.firestore.Query;
-
-import java.util.HashMap;
 
 
 /**

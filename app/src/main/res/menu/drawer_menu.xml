@@ -27,6 +27,10 @@
             android:id="@+id/nav_log_out"
             android:icon="@drawable/icon_logout"
             android:title="Log out"/>
+        <item
+            android:id="@+id/salesFragment"
+            android:icon="@drawable/ic_money"
+            android:title="Sale"/>
 
     </group>
 </menu>

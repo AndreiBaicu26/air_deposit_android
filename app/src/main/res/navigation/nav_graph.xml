@@ -64,6 +64,9 @@
             app:popExitAnim="@anim/slide_out_right"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"/>
+        <action
+            android:id="@+id/action_homeFragment_to_salesFragment"
+            app:destination="@id/salesFragment" />
     </fragment>
     <fragment
         android:id="@+id/organiseFragment"
@@ -134,4 +137,13 @@
         android:name="com.example.airdeposit.fragments.StorageDetailsFragment"
         android:label="fragment_storage_details"
         tools:layout="@layout/fragment_storage_details" />
+
+    <fragment
+        android:id="@+id/salesFragment"
+        android:name="com.example.airdeposit.fragments.SalesFragment"
+        android:label="SalesFragment" >
+        <action
+            android:id="@+id/action_salesFragment_to_cameraScanFragment"
+            app:destination="@id/cameraScanFragment" />
+    </fragment>
 </navigation>

@@ -3,7 +3,6 @@ package com.example.airdeposit.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.airdeposit.Firebase;
 import com.example.airdeposit.R;
-import com.example.airdeposit.StorageAdapter;
+import com.example.airdeposit.adapters.StorageAdapter;
 import com.example.airdeposit.StorageSpace;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.snackbar.BaseTransientBottomBar;

@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.example.airdeposit.Firebase;
 import com.example.airdeposit.Product;
 import com.example.airdeposit.R;
-import com.example.airdeposit.StorageAdapter;
+import com.example.airdeposit.adapters.StorageAdapter;
 import com.example.airdeposit.StorageSpace;
 import com.example.airdeposit.databinding.FragmentOrganiseItemBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -26,9 +26,6 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class OrganiseItemFragment extends Fragment {
 
     Button btnScan;

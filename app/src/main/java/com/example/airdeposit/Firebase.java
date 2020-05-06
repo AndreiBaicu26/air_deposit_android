@@ -10,16 +10,16 @@ import com.example.airdeposit.callbacks.CallbackEmployee;
 import com.example.airdeposit.callbacks.CallbackProductAddedToStorage;
 import com.example.airdeposit.callbacks.CallbackSuccessMessage;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.HashMap;
+
 
 public class Firebase  {
 
@@ -40,7 +40,7 @@ public class Firebase  {
                             DocumentSnapshot data = task.getResult();
 
                             Product p = data.toObject(Product.class);
-
+                            p.setReference(db.collection("products").document(p.getDocumentID()));
 
                         callBackProduct.onCallbackProduct(p);
 
@@ -98,6 +98,11 @@ public class Firebase  {
             db.collection("products").document(product.getDocumentID()).update("placesDeposited", product.getPlacesDeposited());
 
     }
+
+    public static void saleProduct(Product product){
+        db.collection("products").document(product.getDocumentID()).update("foh", product.getFoh());
+    }
+
     public  static void updateStorage(StorageSpace storage){
         db.collection("storageSpaces").document(storage.getStorageID())
                 .update("storedProducts", storage.getStoredProducts(), "maxBig", storage.getMaxBig(),
@@ -109,30 +114,24 @@ public class Firebase  {
 
       CollectionReference storageRef = db.collection("storageSpaces");
 
-        storageRef.document(storageID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    if(task.getResult().exists()){
-                       callbackAddStorage.onCallbackAddStorage(null);
-                    }else{
-
-                       StorageSpace space = new StorageSpace(storageID,null);
-                        storageRef.document(storageID).set(space).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-                                    callbackAddStorage.onCallbackAddStorage(space);
-
-                                }else{
-                                    Log.e("firestore", "error while adding space");
-                                }
-                            }
-                        });
-                    }
+        storageRef.document(storageID).get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                if(task.getResult().exists()){
+                   callbackAddStorage.onCallbackAddStorage(null);
                 }else{
-                    Log.e("firestore", "error while searching for ID");
+
+                   StorageSpace space = new StorageSpace(storageID,null);
+                    storageRef.document(storageID).set(space).addOnCompleteListener(task1 -> {
+                        if(task1.isSuccessful()){
+                            callbackAddStorage.onCallbackAddStorage(space);
+
+                        }else{
+                            Log.e("firestore", "error while adding space");
+                        }
+                    });
                 }
+            }else{
+                Log.e("firestore", "error while searching for ID");
             }
         });
     }
@@ -157,11 +156,7 @@ public class Firebase  {
     public static Query queryForStoragesRecyclerView(){
         Query query = db.collection("storageSpaces").orderBy("storageID", Query.Direction.ASCENDING);
 
-
-
-
         return query;
-
     }
 
     public static Query queryForProductInStorageRecyclerView(String storageID){
@@ -192,5 +187,16 @@ public class Firebase  {
 
     }
 
+    public static Query queryForRefill(){
+        Query query = db.collection("sales").orderBy("dateCreated", Query.Direction.ASCENDING);
+        return query;
+    }
+
+    public static void createSale(Sale s){
+
+        CollectionReference salesRef = db.collection("sales");
+
+        salesRef.add(s);
+    }
 
 }
