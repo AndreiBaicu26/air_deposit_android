@@ -90,9 +90,10 @@ public class CameraScanFragment extends Fragment implements ZXingScannerView.Res
                     alert.show();
                 } else {
                     if(product.getFoh()==0){
-                        //TODO alert no more products in front
+                        builder.setTitle("No more FOH products");
+                        builder.create().show();
                     }else{
-                        Sale s = new Sale(product.getReference(),false);
+                        Sale s = new Sale(product);
                         Firebase.saleProduct(product);
                         Firebase.createSale(s);
                         builder.setTitle("Product sold");

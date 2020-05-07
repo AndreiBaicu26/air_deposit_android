@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.example.airdeposit.callbacks.CallBackProduct;
 import com.example.airdeposit.callbacks.CallbackAddStorage;
 import com.example.airdeposit.callbacks.CallbackEmployee;
+import com.example.airdeposit.callbacks.CallbackGetStorage;
 import com.example.airdeposit.callbacks.CallbackProductAddedToStorage;
 import com.example.airdeposit.callbacks.CallbackSuccessMessage;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,7 +29,22 @@ public class Firebase  {
     public static void deleteStorageSpace(StorageSpace s){
 
         db.collection("storageSpaces").document(s.getStorageID()).delete();
+        db.collection("products").whereGreaterThan("placesDeposited."+s.getStorageID(),0).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    if(task.getResult() != null){
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Product p = document.toObject(Product.class);
+                            p.getPlacesDeposited().remove(s.getStorageID());
+                            document.getReference().update("placesDeposited",p.getPlacesDeposited());
+                        }
+                        }
+                    }
+                }
+            });
     }
+
 
     public static void getProduct(String productBarCode, final CallBackProduct callBackProduct) {
 
@@ -40,7 +56,7 @@ public class Firebase  {
                             DocumentSnapshot data = task.getResult();
 
                             Product p = data.toObject(Product.class);
-                            p.setReference(db.collection("products").document(p.getDocumentID()));
+
 
                         callBackProduct.onCallbackProduct(p);
 
@@ -95,7 +111,7 @@ public class Firebase  {
     }
 
     public static void removeProductFromStorage(Product product){
-            db.collection("products").document(product.getDocumentID()).update("placesDeposited", product.getPlacesDeposited());
+            db.collection("products").document(product.getDocumentID()).update("foh",product.getFoh(),"boh",product.getBoh() ,"placesDeposited", product.getPlacesDeposited());
 
     }
 
@@ -188,15 +204,34 @@ public class Firebase  {
     }
 
     public static Query queryForRefill(){
-        Query query = db.collection("sales").orderBy("dateCreated", Query.Direction.ASCENDING);
+        Query query = db.collection("sales").whereEqualTo("refilled",false);
+
+
         return query;
     }
 
     public static void createSale(Sale s){
 
         CollectionReference salesRef = db.collection("sales");
-
+        Log.d("salvareFIre", s.toString());
         salesRef.add(s);
     }
 
+    public static void  getStorage(String storageID, final CallbackGetStorage callbackGetStorage){
+        db.collection("storageSpaces").document(storageID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    if(task.getResult() != null) {
+                        Log.d("storageeee", task.getResult().toString());
+                        StorageSpace s = task.getResult().toObject(StorageSpace.class);
+                        Log.d("storageeee", s.getStorageID() + s.getStoredProducts().toString());
+                        callbackGetStorage.onCallbackGetStorage(s);
+                    }else{
+                        Log.d("storageeee", task.getResult().toString());
+                    }
+                }
+            }
+        });
+    }
 }

@@ -26,29 +26,33 @@ public class SalesFragment extends Fragment {
     public SalesFragment() {
 
     }
+
     Button btnScan;
     EditText input;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v =  inflater.inflate(R.layout.fragment_sales, container, false);
+        View v = inflater.inflate(R.layout.fragment_sales, container, false);
         btnScan = v.findViewById(R.id.btn_scan_sale);
-        btnScan.setOnClickListener(view ->{
+        btnScan.setOnClickListener(view -> {
             Bundle b = new Bundle();
             b.putString("from", "sale");
-            Navigation.findNavController(v).navigate(R.id.action_salesFragment_to_cameraScanFragment,b);
+            Navigation.findNavController(v).navigate(R.id.action_salesFragment_to_cameraScanFragment, b);
         });
 
 
         input = getActivity().findViewById(R.id.inputProductId);
         ImageView i = getActivity().findViewById(R.id.custom_toolbar).findViewById(R.id.imgSearch);
-        i.setOnClickListener(a->{imgPressSearchProduct(getView());});
+        i.setOnClickListener(a -> {
+            imgPressSearchProduct(getView());
+        });
 
         return v;
     }
 
     private void imgPressSearchProduct(View view) {
-        if(input.getText().toString().length() > 0) {
+        if (input.getText().toString().length() > 0) {
             String productCode = input.getText().toString();
             final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setPositiveButton("Ok", (dialog, which) -> {
@@ -65,12 +69,13 @@ public class SalesFragment extends Fragment {
                     alert.show();
                 } else {
                     if (product.getFoh() == 0) {
-                        //TODO alert no more products in front
+                        builder.setTitle("No more FOH products");
+                        builder.create().show();
                     } else {
                         product.setFoh(product.getFoh() - 1);
 
-                        Sale s = new Sale(product.getReference(),false);
-                        Log.d("timeeeeee",s.toString());
+                        Sale s = new Sale(product);
+
                         Firebase.saleProduct(product);
                         Firebase.createSale(s);
                         builder.setTitle("Product sold");

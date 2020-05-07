@@ -12,18 +12,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.airdeposit.Product;
 import com.example.airdeposit.R;
 import com.example.airdeposit.Sale;
+import com.example.airdeposit.callbacks.CallBackProduct;
+import com.example.airdeposit.fragments.RefillFragment;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class SaleAdapter extends FirestoreRecyclerAdapter<Sale, SaleAdapter.SaleViewHolder> {
 
+
+    private  CallBackProduct getProduct;
     public SaleAdapter(@NonNull FirestoreRecyclerOptions options) {
         super(options);
     }
@@ -32,35 +33,37 @@ public class SaleAdapter extends FirestoreRecyclerAdapter<Sale, SaleAdapter.Sale
     @Override
     protected void onBindViewHolder(@NonNull SaleViewHolder holder, int position, @NonNull Sale model) {
 
-        model.getProductRef().get().addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
-                Product product = task.getResult().toObject(Product.class);
+
+
+                Product product = model.getProduct();
                 StringBuilder sb = new StringBuilder();
-                Log.d("keys",product.getPlacesDeposited().toString());
-                for(String key: product.getPlacesDeposited().keySet()){
-                    Log.d("keys",key);
+
+                for (String key : product.getPlacesDeposited().keySet()) {
+
                     sb.append(key).append(" ");
                 }
-                String placesDeposited = "Storages: "  + sb.toString();
+                String placesDeposited = "Storages: " + sb.toString();
                 holder.placesDeposited.setText(placesDeposited);
                 holder.nameOfProduct.setText(product.getName());
-                Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-                  calendar.setTime(model.getDateCreated());   // assigns calendar to given date
-               String hour = String.valueOf(calendar.get(Calendar.HOUR_OF_DAY));
-               String minute = String.valueOf(calendar.get(Calendar.MINUTE));
-               if(minute.length() == 1){
-                   holder.time.setText(hour + ":0" + minute);
-               }else{
-                   holder.time.setText(hour + ":"+minute);
-               }
-
-            }
-        });
-
-
-
+                Calendar calendar = GregorianCalendar.getInstance();
+                calendar.setTime(model.getDateCreated());
+                String hour = String.valueOf(calendar.get(Calendar.HOUR_OF_DAY));
+                String minute = String.valueOf(calendar.get(Calendar.MINUTE));
+               // model.setProduct(product);
+                if (minute.length() == 1) {
+                    holder.time.setText(hour + ":0" + minute);
+                } else {
+                    holder.time.setText(hour + ":" + minute);
+                }
 
     }
+
+
+
+    public void updateSale(int position){
+        getSnapshots().getSnapshot(position).getReference().update("refilled", true);
+    }
+
 
     @NonNull
     @Override
@@ -70,15 +73,22 @@ public class SaleAdapter extends FirestoreRecyclerAdapter<Sale, SaleAdapter.Sale
     }
 
 
-    class SaleViewHolder extends RecyclerView.ViewHolder{
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        RefillFragment.checkIfRVEmpty(getItemCount());
+    }
+
+    class SaleViewHolder extends RecyclerView.ViewHolder {
 
         TextView nameOfProduct;
         TextView placesDeposited;
         TextView time;
+
         public SaleViewHolder(@NonNull View itemView) {
             super(itemView);
             nameOfProduct = itemView.findViewById(R.id.tvNameOfProduct);
-            placesDeposited= itemView.findViewById(R.id.tvPlacesDeposited);
+            placesDeposited = itemView.findViewById(R.id.tvPlacesDeposited);
             time = itemView.findViewById(R.id.tvTime);
         }
     }

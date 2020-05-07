@@ -103,8 +103,6 @@ public class StorageDetailsFragment extends Fragment {
                 }
             }
 
-
-
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 

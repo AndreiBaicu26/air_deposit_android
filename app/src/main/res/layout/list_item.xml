@@ -34,6 +34,7 @@
             android:fontFamily="@font/pt_serif_bold"
             android:text="A50"
             android:textColor="@android:color/black"
+
             android:textSize="26sp" />
 
         <TextView

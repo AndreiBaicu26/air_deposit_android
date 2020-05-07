@@ -9,7 +9,6 @@ import java.util.HashMap;
 
 public class Product implements Parcelable {
 
-    private DocumentReference reference;
     private String documentId;
     private String name;
     private int boh;
@@ -52,14 +51,6 @@ public class Product implements Parcelable {
         this.foh = foh;
         this.noOfPlayers = noOfPlayers;
         this.size = size;
-    }
-
-    public DocumentReference getReference() {
-        return reference;
-    }
-
-    public void setReference(DocumentReference reference) {
-        this.reference = reference;
     }
 
     protected Product(Parcel in) {
@@ -157,5 +148,12 @@ public class Product implements Parcelable {
         this.placesDeposited = placesDeposited;
     }
 
+    public  int getUnStoredProducts(){
+        int stored = 0;
+        for (int value:this.getPlacesDeposited().values()) {
+            stored += value;
+        }
+        return this.boh - stored;
+    }
 
 }

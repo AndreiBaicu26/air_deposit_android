@@ -2,6 +2,8 @@ package com.example.airdeposit;
 
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -9,46 +11,24 @@ import java.util.Date;
 
 public class Sale {
 
-   // private Product product;
-    private DocumentReference productRef;
+    private Product product;
     private Date dateCreated;
     private boolean isRefilled;
 
-    public Sale(DocumentReference product, boolean isRefilled) {
-        this.productRef = product;
-
-        this.dateCreated = Calendar.getInstance().getTime();
-        this.isRefilled = isRefilled;
-//        Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-//        calendar.setTime(dateCreated);   // assigns calendar to given date
-//        calendar.get(Calendar.HOUR_OF_DAY); // get
+    public Sale(Product product) {
+     this.product = product;
+        this.dateCreated =  Calendar.getInstance().getTime();;
+        this.isRefilled = false;
     }
 
     public Sale() {
 
     }
 
-//    public void setProduct(Product p){
-//
-//    }
-
-//    public Product getProduct(){
-//        return this.product;
-//    }
-
-    public DocumentReference getProductRef() {
-        return productRef;
-    }
-
-    public void setProductRef(DocumentReference product) {
-        this.productRef = product;
-    }
 
     public Date getDateCreated() {
-
         return dateCreated;
     }
-
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
@@ -62,10 +42,18 @@ public class Sale {
         isRefilled = refilled;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
     @Override
     public String toString() {
         return "Sale{" +
-                "product="  +
+                "product=" + product +
                 ", dateCreated=" + dateCreated +
                 ", isRefilled=" + isRefilled +
                 '}';
