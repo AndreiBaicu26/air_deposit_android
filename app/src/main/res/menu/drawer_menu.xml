@@ -32,5 +32,10 @@
             android:icon="@drawable/ic_money"
             android:title="Sale"/>
 
+        <item
+            android:id="@+id/receiving"
+            android:icon="@drawable/ic_ruck_loading"
+            android:title="Receiving"/>
+
     </group>
 </menu>

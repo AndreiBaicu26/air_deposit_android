@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 public class Employee implements Parcelable {
 
+
+    private boolean isManager;
     private String firstName;
     private String lastName;
     private int employeeID;
@@ -39,6 +41,13 @@ public class Employee implements Parcelable {
         }
     };
 
+    public boolean isManager() {
+        return isManager;
+    }
+
+    public void setManager(boolean manager) {
+        isManager = manager;
+    }
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -71,6 +80,8 @@ public class Employee implements Parcelable {
                 ", employeeID=" + employeeID +
                 '}';
     }
+
+
 
     @Override
     public int describeContents() {

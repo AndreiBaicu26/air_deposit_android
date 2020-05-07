@@ -152,6 +152,7 @@ public class Firebase  {
         });
     }
 
+
     public static void addProductToStorage(StorageSpace storage, Product product, final CallbackProductAddedToStorage callback){
         db.collection("storageSpaces").document(storage.getStorageID())
                 .update("storedProducts",storage.getStoredProducts(),"maxBig",storage.getMaxBig(),
@@ -167,6 +168,10 @@ public class Firebase  {
                 .addOnFailureListener(aVoid->{
                    Log.e("Firestore", "Could not add Product to storage");
                 });
+    }
+
+    public static void receivedNewProducts(String productID, int quantity){
+        db.collection("products").document(productID).update("boh",quantity );
     }
 
     public static Query queryForStoragesRecyclerView(){

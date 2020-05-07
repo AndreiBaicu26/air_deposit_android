@@ -71,6 +71,7 @@ public class SalesFragment extends Fragment {
                     if (product.getFoh() == 0) {
                         builder.setTitle("No more FOH products");
                         builder.create().show();
+
                     } else {
                         product.setFoh(product.getFoh() - 1);
 

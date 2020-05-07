@@ -4,20 +4,25 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.airdeposit.Firebase;
 import com.example.airdeposit.Product;
 import com.example.airdeposit.R;
 import com.example.airdeposit.adapters.StorageAdapter;
 import com.example.airdeposit.StorageSpace;
+import com.example.airdeposit.callbacks.CallbackAddStorage;
 import com.example.airdeposit.databinding.FragmentOrganiseItemBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -30,12 +35,14 @@ public class OrganiseItemFragment extends Fragment {
 
     Button btnScan;
     Product product;
+    EditText input;
     private RecyclerView recyclerView;
     private StorageAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<StorageSpace> list;
     private FragmentOrganiseItemBinding binder;
     View view;
+    StorageSpace storageSpace;
 
     public OrganiseItemFragment() {
 
@@ -47,11 +54,11 @@ public class OrganiseItemFragment extends Fragment {
 
         binder = FragmentOrganiseItemBinding.inflate(inflater, container, false);
 
-       if(getArguments() != null) {
-           product = getArguments().getParcelable("product");
-       }
+        if (getArguments() != null) {
+            product = getArguments().getParcelable("product");
+        }
 
-       setUpRecyclerView();
+        setUpRecyclerView();
         setUpViews(product);
 
         view = binder.getRoot();
@@ -59,41 +66,41 @@ public class OrganiseItemFragment extends Fragment {
     }
 
     private void setUpViews(Product product) {
-        if(product != null){
+        if (product != null) {
 
-            String productName = "Name: " +product.getName();
+            String productName = "Name: " + product.getName();
             String productSize = "Size: " + product.getSize().toUpperCase();
             binder.tvOrganiseItemName.setText(productName);
             binder.tvSize.setText(productSize);
+
 
             updateDepositedInField(product);
         }
     }
 
-    private void updateDepositedInField(Product product){
+    private void updateDepositedInField(Product product) {
         binder.tvDepositedIn.setText(R.string.deposited_in);
         String depositedIn = binder.tvDepositedIn.getText().toString();
-        if(product.getPlacesDeposited() == null) {
+        if (product.getPlacesDeposited() == null) {
 
             binder.tvDepositedIn.setText(depositedIn + " - ");
-        }else{
+        } else {
             StringBuilder listOfDeposited = new StringBuilder();
             listOfDeposited.append(depositedIn);
-            for(String storage : product.getPlacesDeposited().keySet()){
+            for (String storage : product.getPlacesDeposited().keySet()) {
                 listOfDeposited.append("  ").append(storage);
             }
-            String result = listOfDeposited.toString() ;
+            String result = listOfDeposited.toString();
             binder.tvDepositedIn.setText(result);
         }
     }
 
 
-
     private void setUpRecyclerView() {
         FirestoreRecyclerOptions<StorageSpace> options = new FirestoreRecyclerOptions.Builder<StorageSpace>()
-                .setQuery(Firebase.queryForStoragesRecyclerView(),StorageSpace.class)
+                .setQuery(Firebase.queryForStoragesRecyclerView(), StorageSpace.class)
                 .build();
-        adapter = new StorageAdapter(options,false);
+        adapter = new StorageAdapter(options, false);
         recyclerView = binder.rvAddProductsToStorage;
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
@@ -105,7 +112,7 @@ public class OrganiseItemFragment extends Fragment {
         adapter.setOnItemClickListener(new StorageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position, TextView boxImg) {
-                createAlertDialogForAddingToStorage(adapter.getItem(position),position);
+                createAlertDialogForAddingToStorage(adapter.getItem(position), position);
             }
 
             @Override
@@ -119,7 +126,7 @@ public class OrganiseItemFragment extends Fragment {
     private void createAlertDialogForAddingToStorage(StorageSpace storage, int position) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Add " + product.getName() + " to " +storage.getStorageID() );
+        builder.setTitle("Add " + product.getName() + " to " + storage.getStorageID());
         builder.setPositiveButton("Yes", (dialogInterface, i) -> {
 
             assignProductToStorage(storage);
@@ -137,8 +144,8 @@ public class OrganiseItemFragment extends Fragment {
             product.addProductToStorage(storage);
             Firebase.addProductToStorage(storage, product, message -> Snackbar.make(getView(), message, BaseTransientBottomBar.LENGTH_SHORT).show());
             updateDepositedInField(product);
-        }catch (Exception e) {
-            Snackbar.make(getView(),e.getMessage(),BaseTransientBottomBar.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Snackbar.make(getView(), e.getMessage(), BaseTransientBottomBar.LENGTH_SHORT).show();
         }
     }
 

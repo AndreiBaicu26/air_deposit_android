@@ -5,9 +5,11 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -65,6 +67,22 @@ public class CameraScanFragment extends Fragment implements ZXingScannerView.Res
 
                     AlertDialog alert = builder.create();
                     alert.show();
+                }else if(from.equals("receiving")){
+                    final AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    builder2.setTitle("How many products received?");
+                    final EditText input = new EditText(getContext());
+
+                    input.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    builder2.setView(input);
+                    builder2.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if(input.getText().toString().length() > 0 && !input.getText().toString().contains(" ")) {
+                                int quantity = Integer.valueOf(input.getText().toString());
+                                Firebase.receivedNewProducts(detectedText, quantity);
+                            }
+                        }
+                    });
 
                 } else {
                     Bundle bundle = new Bundle();
@@ -93,6 +111,7 @@ public class CameraScanFragment extends Fragment implements ZXingScannerView.Res
                         builder.setTitle("No more FOH products");
                         builder.create().show();
                     }else{
+                        product.setFoh(product.getFoh() - 1);
                         Sale s = new Sale(product);
                         Firebase.saleProduct(product);
                         Firebase.createSale(s);

@@ -94,6 +94,7 @@ public class SignInActivity extends AppCompatActivity {
                     Intent it = new Intent(getApplicationContext(),MainActivity.class);
                     it.putExtra("employee",  employee);
                     startActivity(it);
+                    finish();
                 }
             }
         });

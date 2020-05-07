@@ -46,18 +46,18 @@ public class AddStorageFragment extends Fragment {
 
             String storageID = storageIDInput.getText().toString();
 
-            if(storageID.length() == 0 || storageID.contains(" ")){
-                Toast.makeText(getContext(),"Please insert a new ID", Toast.LENGTH_SHORT).show();
-            }else{
+            if (storageID.length() == 0 || storageID.contains(" ")) {
+                Toast.makeText(getContext(), "Please insert a new ID", Toast.LENGTH_SHORT).show();
+            } else {
 
                 Firebase.addStorageSpace(storageID, new CallbackAddStorage() {
                     @Override
                     public void onCallbackAddStorage(StorageSpace storageSpace) {
-                        if(storageSpace == null){
+                        if (storageSpace == null) {
 
-                            Toast.makeText(getContext(),"Storage with this ID already exists", Toast.LENGTH_SHORT).show();
-                        }else{
-                            Snackbar.make(requireView(),"Storage added", BaseTransientBottomBar.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Storage with this ID already exists", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Snackbar.make(requireView(), "Storage added", BaseTransientBottomBar.LENGTH_SHORT).show();
 
                             Navigation.findNavController(getView()).navigate(R.id.action_addStorageFragment2_to_addStorageFragment);
                         }

@@ -21,12 +21,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.airdeposit.callbacks.CallBackProduct;
+import com.example.airdeposit.fragments.CameraScanFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentReference;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
-{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     Toolbar toolbar;
     TextView textViewEmployeeName;
@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navView;
     AppBarConfiguration appBarConfiguration;
     EditText productCodeId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,15 +58,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void initFragments() {
 
-        controller = Navigation.findNavController(this,R.id.nav_host_fragment);
-       NavigationUI.setupActionBarWithNavController(this,controller,drawer);
-        NavigationUI.setupWithNavController(navView,controller);
+        controller = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, controller, drawer);
+        NavigationUI.setupWithNavController(navView, controller);
         navView.setNavigationItemSelectedListener(this);
 
     }
 
     private void setCurrentEmployee() {
-       navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
 
         View header = navView.getHeaderView(0);
         textViewEmployeeName = header.findViewById(R.id.textView_employeeName);
@@ -76,15 +77,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textViewEmployeeName.setText(employeeFullName);
     }
 
-    public void setToolbar(){
+    public void setToolbar() {
         toolbar = findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
     }
 
-    public void setDrawer(){
+    public void setDrawer() {
         drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,
-                R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -92,16 +93,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        if(drawer.isDrawerOpen((GravityCompat.START))){
+        if (drawer.isDrawerOpen((GravityCompat.START))) {
             drawer.closeDrawer(GravityCompat.START);
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
 
     public void imgPressSearchProduct(final View view) {
 
-        if(productCodeId.getText().toString().length() > 0) {
+        if (productCodeId.getText().toString().length() > 0) {
             String productCode = productCodeId.getText().toString();
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -109,7 +110,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onClick(DialogInterface dialog, int which) {
 
 
-                }});
+                }
+            });
 
 
             Firebase.getProduct(productCode, new CallBackProduct() {
@@ -125,10 +127,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     } else {
 
                         Bundle bundle = new Bundle();
-                        bundle.putParcelable("product",product);
-                        controller.navigate(R.id.action_homeFragment_to_productDetailsFragment,bundle);
+                        bundle.putParcelable("product", product);
+                        controller.navigate(R.id.action_homeFragment_to_productDetailsFragment, bundle);
                     }
-                }});
+                }
+            });
 
         }
 
@@ -137,11 +140,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onSupportNavigateUp() {
-        return NavigationUI.navigateUp(controller,drawer);
+        return NavigationUI.navigateUp(controller, drawer);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.nav_log_out) {
+            Intent it = new Intent(this, SignInActivity.class);
+            startActivity(it);
+            finish();
+        }
+        if(item.getItemId() == R.id.receiving){
+            if(currentEmployee.isManager()) {
+                Bundle bundle = new Bundle();
+                bundle.putString("from", "receiving");
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.cameraScanFragment, bundle);
+            }else{
+                AlertDialog.Builder b= new AlertDialog.Builder(this).setTitle("Only managers can perform this action");
+                b.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                b.create().show();
+            }
+        }
         return NavigationUI.onNavDestinationSelected(item, controller)
                 || super.onOptionsItemSelected(item);
     }

@@ -60,8 +60,8 @@ public class SaleAdapter extends FirestoreRecyclerAdapter<Sale, SaleAdapter.Sale
 
 
 
-    public void updateSale(int position){
-        getSnapshots().getSnapshot(position).getReference().update("refilled", true);
+    public void updateSale(int position,Product p){
+        getSnapshots().getSnapshot(position).getReference().update("refilled", true, "product",p);
     }
 
 

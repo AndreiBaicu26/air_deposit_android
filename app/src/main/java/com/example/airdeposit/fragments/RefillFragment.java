@@ -135,10 +135,23 @@ public class RefillFragment extends Fragment {
 
             } else {
                 if (this.selectedStorage == null) {
-                    product.setBoh(product.getBoh() - 1);
-                    product.setFoh(product.getFoh() + 1);
-                    Firebase.removeProductFromStorage(product);
-                    adapter.updateSale(position);
+                    if(product.getBoh()==0){
+                            AlertDialog.Builder b = new AlertDialog.Builder(getContext());
+                            b.setTitle("No more products in deposit!");
+                            b.setNeutralButton("Ok", (dialogInterface, i1) -> {
+
+                            });
+                            b.create().show();
+                           recyclerView.setAdapter(adapter);
+                    }else{
+                        product.setFoh(product.getFoh() + 1);
+                        product.setBoh(product.getBoh() - 1);
+                        Firebase.removeProductFromStorage(product);
+                        adapter.updateSale(position,product);
+                    }
+
+
+
                 } else
                     refillProcess(product, position);
                 dialog.dismiss();
@@ -150,8 +163,9 @@ public class RefillFragment extends Fragment {
             recyclerView.setAdapter(adapter);
             dialog.dismiss();
         });
-        builder.create().show();
 
+        builder.create().show();
+        recyclerView.setAdapter(adapter);
     }
 
     private void refillProcess(Product p, int position) {
@@ -163,7 +177,7 @@ public class RefillFragment extends Fragment {
             p.getPlacesDeposited().put(this.selectedStorage, p.getPlacesDeposited().get(this.selectedStorage) - 1);
         }
         Firebase.removeProductFromStorage(p);
-        adapter.updateSale(position);
+        adapter.updateSale(position,p);
         Firebase.getStorage(this.selectedStorage, (StorageSpace storage) -> {
             removeFromStorage(storage, p);
         });
