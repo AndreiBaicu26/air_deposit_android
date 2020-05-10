@@ -38,6 +38,7 @@ public class Firebase  {
                             Product p = document.toObject(Product.class);
                             p.getPlacesDeposited().remove(s.getStorageID());
                             document.getReference().update("placesDeposited",p.getPlacesDeposited());
+                            Firebase.updateAllSales(p);
                         }
                         }
                     }
@@ -72,29 +73,25 @@ public class Firebase  {
 
     public static void getEmployee(int employeeID, final CallbackEmployee callback){
         CollectionReference collectionReference = db.collection("employees");
-        Query query = collectionReference.whereEqualTo("id",employeeID );
-        final Employee e = new Employee();
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+        collectionReference.whereEqualTo("id",employeeID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    if(!task.getResult().isEmpty()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d("aaa", document.getData().toString());
-                            e.setEmployeeID(document.getLong("id").intValue());
-                            e.setFirstName(document.getString("firstName"));
-                            e.setLastName(document.getString("lastName"));
+                    if(task.isSuccessful()){
 
-                            callback.onCallback(e);
+                        if(!task.getResult().isEmpty()){
+
+                            for(DocumentSnapshot data: task.getResult()){
+                                callback.onCallback(data.toObject(Employee.class));
+                            }
+
+                        }else{
+                            callback.onCallback(null);
                         }
-                    }else
-                    {
-                        callback.onCallback(e);
-                    }
-                } else {
-                    Log.d("iii", "onComplete: failed to search for employee ");
 
-                }
+                    }else{
+
+                    }
             }
         });
 
@@ -111,11 +108,31 @@ public class Firebase  {
     }
 
     public static void removeProductFromStorage(Product product){
+            Firebase.updateAllSales(product);
             db.collection("products").document(product.getDocumentID()).update("foh",product.getFoh(),"boh",product.getBoh() ,"placesDeposited", product.getPlacesDeposited());
 
     }
 
+    public static void updateAllSales(Product p ){
+        db.collection("sales").whereEqualTo("product.name",p.getName()).whereEqualTo("refilled",false).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    if(task.getResult() != null){
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                           db.collection("sales").document(document.getId()).update("product",p);
+                        }
+                    }
+                }
+            }
+
+        });
+
+
+    }
+
     public static void saleProduct(Product product){
+        Firebase.updateAllSales(product);
         db.collection("products").document(product.getDocumentID()).update("foh", product.getFoh());
     }
 
@@ -154,6 +171,7 @@ public class Firebase  {
 
 
     public static void addProductToStorage(StorageSpace storage, Product product, final CallbackProductAddedToStorage callback){
+        Firebase.updateAllSales(product);
         db.collection("storageSpaces").document(storage.getStorageID())
                 .update("storedProducts",storage.getStoredProducts(),"maxBig",storage.getMaxBig(),
                         "maxMedium", storage.getMaxMedium(),
@@ -218,7 +236,6 @@ public class Firebase  {
     public static void createSale(Sale s){
 
         CollectionReference salesRef = db.collection("sales");
-        Log.d("salvareFIre", s.toString());
         salesRef.add(s);
     }
 
@@ -228,9 +245,9 @@ public class Firebase  {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     if(task.getResult() != null) {
-                        Log.d("storageeee", task.getResult().toString());
+
                         StorageSpace s = task.getResult().toObject(StorageSpace.class);
-                        Log.d("storageeee", s.getStorageID() + s.getStoredProducts().toString());
+
                         callbackGetStorage.onCallbackGetStorage(s);
                     }else{
                         Log.d("storageeee", task.getResult().toString());

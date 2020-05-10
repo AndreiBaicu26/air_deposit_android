@@ -9,24 +9,36 @@ public class Employee implements Parcelable {
     private boolean isManager;
     private String firstName;
     private String lastName;
-    private int employeeID;
+    private int id;
 
-    public Employee(String firstName, String lastName, int employeeID) {
+    public Employee(String firstName, String lastName, int id) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.employeeID = employeeID;
+        this.id = id;
     }
 
     public Employee(){
-        this.firstName="";
-        this.lastName="";
-        this.employeeID=0;
     }
 
+
     protected Employee(Parcel in) {
+        isManager = in.readByte() != 0;
         firstName = in.readString();
         lastName = in.readString();
-        employeeID = in.readInt();
+        id = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeByte((byte) (isManager ? 1 : 0));
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeInt(id);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Employee> CREATOR = new Creator<Employee>() {
@@ -56,8 +68,8 @@ public class Employee implements Parcelable {
         this.lastName = lastName;
     }
 
-    public void setEmployeeID(int employeeID) {
-        this.employeeID = employeeID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -68,30 +80,11 @@ public class Employee implements Parcelable {
         return lastName;
     }
 
-    public int getEmployeeID() {
-        return employeeID;
-    }
-
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", employeeID=" + employeeID +
-                '}';
+    public int getId() {
+        return id;
     }
 
 
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(this.firstName);
-        parcel.writeString(this.lastName);
-        parcel.writeInt(this.employeeID);
-    }
 }

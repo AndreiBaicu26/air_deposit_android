@@ -177,7 +177,7 @@ public class StorageDetailsFragment extends Fragment {
                     }
                 }
 
-
+                Firebase.updateAllSales(product);
                 Firebase.removeProductFromStorage(product);
                 Firebase.updateStorage(currentStorage);
                 setViews();
@@ -207,6 +207,7 @@ public class StorageDetailsFragment extends Fragment {
             Firebase.removeProductFromStorage(product);
         }
         Firebase.emptyStorage(currentStorage, message -> Snackbar.make(getView(),message, BaseTransientBottomBar.LENGTH_SHORT).show());
+
         setViews();
     }
 

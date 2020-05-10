@@ -147,7 +147,8 @@ public class RefillFragment extends Fragment {
                         product.setFoh(product.getFoh() + 1);
                         product.setBoh(product.getBoh() - 1);
                         Firebase.removeProductFromStorage(product);
-                        adapter.updateSale(position,product);
+                        Firebase.updateAllSales(product);
+                        adapter.updateSale(position);
                     }
 
 
@@ -176,8 +177,9 @@ public class RefillFragment extends Fragment {
         } else {
             p.getPlacesDeposited().put(this.selectedStorage, p.getPlacesDeposited().get(this.selectedStorage) - 1);
         }
+        adapter.updateSale(position);
         Firebase.removeProductFromStorage(p);
-        adapter.updateSale(position,p);
+        Firebase.updateAllSales(p);
         Firebase.getStorage(this.selectedStorage, (StorageSpace storage) -> {
             removeFromStorage(storage, p);
         });
@@ -187,6 +189,7 @@ public class RefillFragment extends Fragment {
     private void removeFromStorage(StorageSpace storage, Product product) {
         try {
             if (storage.getStoredProducts().get(product.getName()) == 1) {
+                storage.removeProductFromStorage(product);
                 storage.getStoredProducts().remove(product.getName());
             } else {
                 storage.removeProductFromStorage(product);
@@ -195,6 +198,7 @@ public class RefillFragment extends Fragment {
 
 
             Firebase.updateStorage(storage);
+
 
         } catch (Exception e) {
             Snackbar.make(getView(), e.getMessage(), BaseTransientBottomBar.LENGTH_SHORT).show();

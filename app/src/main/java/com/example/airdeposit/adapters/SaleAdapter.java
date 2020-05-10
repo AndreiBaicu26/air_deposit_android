@@ -33,8 +33,6 @@ public class SaleAdapter extends FirestoreRecyclerAdapter<Sale, SaleAdapter.Sale
     @Override
     protected void onBindViewHolder(@NonNull SaleViewHolder holder, int position, @NonNull Sale model) {
 
-
-
                 Product product = model.getProduct();
                 StringBuilder sb = new StringBuilder();
 
@@ -60,8 +58,8 @@ public class SaleAdapter extends FirestoreRecyclerAdapter<Sale, SaleAdapter.Sale
 
 
 
-    public void updateSale(int position,Product p){
-        getSnapshots().getSnapshot(position).getReference().update("refilled", true, "product",p);
+    public void updateSale(int position){
+        getSnapshots().getSnapshot(position).getReference().update("refilled", true);
     }
 
 

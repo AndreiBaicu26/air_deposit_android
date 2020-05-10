@@ -86,7 +86,7 @@ public class SignInActivity extends AppCompatActivity {
                 boxesAnimator.cancel();
                 ObjectAnimator.ofFloat (boxes, "rotation", 0) .start ();
 
-                if (employee.getEmployeeID() == 0){
+                if (employee == null){
                     Snackbar.make(view,"Invalid ID", BaseTransientBottomBar.LENGTH_SHORT).show();
                 }
                 else{

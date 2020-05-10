@@ -200,10 +200,11 @@ public class StorageSpace implements Parcelable {
 
     private void removeSmallProduct() {
         this.maxSmall +=1;
-        if(this.maxSmall % 2 == 0) {
-            this.maxMedium +=1;
-        }else if(this.maxSmall % 4 ==0) {
+        if(this.maxSmall % 4 == 0) {
             this.maxBig += 1;
+            this.maxMedium +=1;
+        }else if(this.maxSmall % 2 ==0) {
+            this.maxMedium +=1;
         }
     }
 

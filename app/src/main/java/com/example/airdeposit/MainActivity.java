@@ -21,9 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.airdeposit.callbacks.CallBackProduct;
-import com.example.airdeposit.fragments.CameraScanFragment;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.firestore.DocumentReference;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View header = navView.getHeaderView(0);
         textViewEmployeeName = header.findViewById(R.id.textView_employeeName);
         textViewEmployeeID = header.findViewById(R.id.textView_employeeID);
-        String employeeID = "ID: " + currentEmployee.getEmployeeID();
+        String employeeID = "ID: " + currentEmployee.getId();
         textViewEmployeeID.setText(employeeID);
         String employeeFullName = currentEmployee.getFirstName() + " " + currentEmployee.getLastName();
         textViewEmployeeName.setText(employeeFullName);

@@ -59,7 +59,7 @@ public class CameraScanFragment extends Fragment implements ZXingScannerView.Res
         builder.setPositiveButton("Ok", (dialog, which) ->
                 Navigation.findNavController(getView()).popBackStack());
 
-        if(from.equals("organise")|| from.equals("home")) {
+        if(from.equals("organise")|| from.equals("home") || from.equals("receiving")) {
             Firebase.getProduct(detectedText, product -> {
                 if (product == null) {
                     builder.setTitle("Could not detect product");

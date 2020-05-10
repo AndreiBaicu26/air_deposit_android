@@ -63,7 +63,7 @@ public class ListOfStoragesFragment extends Fragment {
         Firebase.deleteStorageSpace(storageSpace);
 
         Snackbar.make(getView(), R.string.storage_deleted, BaseTransientBottomBar.LENGTH_SHORT).show();
-        adapter.notifyItemRemoved(position);
+//        adapter.notifyItemRemoved(position);
     }
 
     private void createAlertForRemovingStorage(StorageSpace storage, int position) {
