@@ -15,7 +15,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="0dp"
-        android:background="@drawable/input_field">
+        android:background="@drawable/input_field"
+        android:id="@+id/toolbarSearch">
 
         <EditText
             android:id="@+id/inputProductId"

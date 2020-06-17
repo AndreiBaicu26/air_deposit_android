@@ -3,15 +3,18 @@ package com.example.airdeposit;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 import java.util.HashMap;
 
-public class StorageSpace implements Parcelable {
+public class StorageSpace implements Parcelable, Cloneable {
 
     private String storageID;
     private HashMap<String, Integer> storedProducts;
     private int maxBig;
     private int maxMedium;
     private int maxSmall;
+
 
 
     public StorageSpace(){
@@ -89,7 +92,14 @@ public class StorageSpace implements Parcelable {
 
     public String getFilledPercentage(){
         float totalProducts = this.maxBig+ this.maxSmall + this.maxMedium;
-        float calc = 100 - ((totalProducts * 100) / 70);
+
+        float calc = 0;
+        if(this.storageID.equals("Processing")){
+            calc = 100 - ((totalProducts * 100) / 140);
+        }else{
+            calc = 100 - ((totalProducts * 100) / 70);
+        }
+
         String strDouble = String.format("%.2f", calc);
         return strDouble;
     }
@@ -130,10 +140,16 @@ public class StorageSpace implements Parcelable {
 
     public void emptyStorage(){
         this.storedProducts.clear();
+        if(this.storageID.equals("Processing")){
+            this.maxBig = 20;
+            this.maxMedium = 40;
+            this.maxSmall = 80;
+        }else{
+            this.maxBig = 10;
+            this.maxMedium = 20;
+            this.maxSmall = 40;
+        }
 
-        this.maxBig = 10;
-        this.maxMedium = 20;
-        this.maxSmall = 40;
 
     }
 
@@ -182,6 +198,19 @@ public class StorageSpace implements Parcelable {
         }
 
     }
+    public void removeProductFromProcessing(Product product) throws Exception {
+        if(product.getSize().equals("small")){
+            if(this.maxSmall == 80) throw new Exception("Storage is empty already");
+            removeSmallProduct();
+        }else if(product.getSize().equals("medium")){
+            if(this.maxMedium == 40) throw new Exception("Storage is empty already");
+            removeMediumProduct();
+        }else{
+            if(this.maxBig == 20) throw new Exception("Storage is empty already");
+            removeBigProduct();
+        }
+
+    }
 
     private void removeMediumProduct() {
         this.maxMedium+=1;
@@ -219,5 +248,21 @@ public class StorageSpace implements Parcelable {
         parcel.writeInt(maxBig);
         parcel.writeInt(maxMedium);
         parcel.writeInt(maxSmall);
+    }
+
+    @NonNull
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+
+        StorageSpace storageSpace = (StorageSpace)super.clone();
+         HashMap<String, Integer> clonedStoredProducts = new HashMap<>();
+         if(this.storedProducts == null){
+             this.storedProducts = new HashMap<>();
+         }
+         clonedStoredProducts.putAll(this.storedProducts);
+         storageSpace.setStoredProducts(clonedStoredProducts);
+        return storageSpace;
+
+
     }
 }

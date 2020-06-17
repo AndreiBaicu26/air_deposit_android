@@ -46,6 +46,8 @@ public class ListOfStoragesFragment extends Fragment {
 
          view =  inflater.inflate(R.layout.fragment_list_of_storages, container, false);
          btnAddStorage = view.findViewById(R.id.btnAddStorage);
+        getActivity().findViewById(R.id.custom_toolbar).findViewById(R.id.inputProductId).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.custom_toolbar).findViewById(R.id.imgSearch).setVisibility(View.GONE);
          btnAddStorage.setOnClickListener(v1 -> {
 
            Navigation.findNavController(getView()).navigate(R.id.action_addStorageFragment_to_addStorageFragment2);
@@ -59,11 +61,15 @@ public class ListOfStoragesFragment extends Fragment {
 
     private void removeStorage(StorageSpace storageSpace, int position){
 
+        if(storageSpace.getStoredProducts().size() > 0 ){
+            Snackbar.make(getView(),"Can't delete storage space while having products stored in it", BaseTransientBottomBar.LENGTH_SHORT).show();
+        }else{
 
-        Firebase.deleteStorageSpace(storageSpace);
+           Firebase.deleteStorageSpace(storageSpace);
+            Snackbar.make(getView(), R.string.storage_deleted, BaseTransientBottomBar.LENGTH_SHORT).show();
+        }
 
-        Snackbar.make(getView(), R.string.storage_deleted, BaseTransientBottomBar.LENGTH_SHORT).show();
-//        adapter.notifyItemRemoved(position);
+
     }
 
     private void createAlertForRemovingStorage(StorageSpace storage, int position) {

@@ -7,19 +7,26 @@ import androidx.annotation.NonNull;
 import com.example.airdeposit.callbacks.CallBackProduct;
 import com.example.airdeposit.callbacks.CallbackAddStorage;
 import com.example.airdeposit.callbacks.CallbackEmployee;
+import com.example.airdeposit.callbacks.CallbackGetAllStorageSpaces;
 import com.example.airdeposit.callbacks.CallbackGetStorage;
 import com.example.airdeposit.callbacks.CallbackProductAddedToStorage;
 import com.example.airdeposit.callbacks.CallbackSuccessMessage;
 import com.google.android.gms.tasks.OnCompleteListener;
+
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Firebase  {
@@ -131,12 +138,21 @@ public class Firebase  {
 
     }
 
+    public static void removeFromProcessing(String prodName, int quantity) {
+        db.collection("storageSpaces").document("Processing").update("storedProducts."+prodName, quantity);
+    }
+
     public static void saleProduct(Product product){
+        Map<String, Object> data = new HashMap<>();
+        Timestamp t = new Timestamp(new Date());
+        data.put("exitDate", t );
         Firebase.updateAllSales(product);
+        db.collection("products").document(product.getDocumentID()).collection("exits").add(data);
         db.collection("products").document(product.getDocumentID()).update("foh", product.getFoh());
     }
 
     public  static void updateStorage(StorageSpace storage){
+
         db.collection("storageSpaces").document(storage.getStorageID())
                 .update("storedProducts", storage.getStoredProducts(), "maxBig", storage.getMaxBig(),
                         "maxMedium", storage.getMaxMedium(),
@@ -188,8 +204,13 @@ public class Firebase  {
                 });
     }
 
-    public static void receivedNewProducts(String productID, int quantity){
-        db.collection("products").document(productID).update("boh",quantity );
+    public static void receivedNewProducts(String productID, int quantity, int entryQuantity){
+       db.collection("products").document(productID).update("boh",quantity );
+        Map<String, Object> data = new HashMap<>();
+        Timestamp t = new Timestamp(new Date());
+        data.put("entryDate", t );
+        data.put("prductsEntered", entryQuantity);
+        db.collection("products").document(productID).collection("entries").add(data);
     }
 
     public static Query queryForStoragesRecyclerView(){
@@ -256,4 +277,25 @@ public class Firebase  {
             }
         });
     }
+
+
+    public static void getAllStorages(final CallbackGetAllStorageSpaces callback){
+
+        db.collection("storageSpaces").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    ArrayList<StorageSpace> storageSpaces = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        storageSpaces.add(document.toObject(StorageSpace.class));
+                    }
+                    callback.callbackGetAllStorageSpaces(storageSpaces);
+                } else {
+                    Log.d("error", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+
 }

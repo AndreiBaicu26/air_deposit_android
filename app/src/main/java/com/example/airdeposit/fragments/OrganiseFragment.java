@@ -27,7 +27,8 @@ public class OrganiseFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_organise, container, false);
-
+        getActivity().findViewById(R.id.custom_toolbar).findViewById(R.id.inputProductId).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.custom_toolbar).findViewById(R.id.imgSearch).setVisibility(View.VISIBLE);
         btnScan = view.findViewById(R.id.btn_scan_organise);
         btnScan.setOnClickListener(v ->{
             Bundle b = new Bundle();

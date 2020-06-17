@@ -19,14 +19,19 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.airdeposit.Sale;
+import com.example.airdeposit.StorageSpace;
 import com.example.airdeposit.callbacks.CallBackProduct;
 import com.example.airdeposit.Firebase;
 import com.example.airdeposit.Product;
 import com.example.airdeposit.R;
+import com.example.airdeposit.callbacks.CallbackGetStorage;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.Result;
 
 import java.sql.Time;
 import java.util.Date;
+import java.util.Objects;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -36,12 +41,14 @@ public class CameraScanFragment extends Fragment implements ZXingScannerView.Res
     private static final int REQUEST_CAMERA = 1;
     private ZXingScannerView mScannerView;
     String from;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         from = getArguments().getString("from");
         mScannerView = new ZXingScannerView(getActivity());
-
+        getActivity().findViewById(R.id.custom_toolbar).findViewById(R.id.inputProductId).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.custom_toolbar).findViewById(R.id.imgSearch).setVisibility(View.GONE);
         if (checkPermission()) {
 
         } else {
@@ -78,12 +85,20 @@ public class CameraScanFragment extends Fragment implements ZXingScannerView.Res
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             if(input.getText().toString().length() > 0 && !input.getText().toString().contains(" ")) {
-                                int quantity = Integer.valueOf(input.getText().toString());
-                                Firebase.receivedNewProducts(detectedText, quantity);
+                                int quantity = Integer.parseInt(input.getText().toString());
+                                int entryQuantity = quantity;
+                                quantity += product.getBoh();
+                                product.setBoh(quantity);
+                                storeItems( product, entryQuantity);
+
+
+
+
                             }
+
                         }
                     });
-
+                    builder2.create().show();
                 } else {
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("product", product);
@@ -109,21 +124,45 @@ public class CameraScanFragment extends Fragment implements ZXingScannerView.Res
                 } else {
                     if(product.getFoh()==0){
                         builder.setTitle("No more FOH products");
-                        builder.create().show();
                     }else{
                         product.setFoh(product.getFoh() - 1);
                         Sale s = new Sale(product);
                         Firebase.saleProduct(product);
                         Firebase.createSale(s);
                         builder.setTitle("Product sold");
-                        builder.create().show();
                     }
+                    builder.create().show();
 
                 }
             });
         }
 
     }
+
+    private void storeItems(Product clonedProduct, int quantity) {
+        Firebase.getStorage("Processing", new CallbackGetStorage() {
+            @Override
+            public void onCallbackGetStorage(StorageSpace storage) {
+                try {
+                    for(int y = 0; y < quantity; y++){
+                        storage.storeProduct(clonedProduct);
+                        clonedProduct.addToProcessing();
+                    }
+                    Firebase.addProductToStorage(storage, clonedProduct, message -> {Snackbar.make(requireView(), message, BaseTransientBottomBar.LENGTH_SHORT).show();
+                        getActivity().onBackPressed();
+                    });
+                    Firebase.receivedNewProducts(clonedProduct.getDocumentID(), clonedProduct.getBoh(),quantity);
+
+
+                } catch (Exception e) {
+                    Snackbar.make(requireView(), e.getMessage(),BaseTransientBottomBar.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+
+    }
+
 
     @Override
     public void onPause() {

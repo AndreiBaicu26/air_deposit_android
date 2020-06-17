@@ -41,7 +41,8 @@ public class AddStorageFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_add_storage, container, false);
         storageIDInput = v.findViewById(R.id.storageIdInput);
-
+        getActivity().findViewById(R.id.custom_toolbar).findViewById(R.id.inputProductId).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.custom_toolbar).findViewById(R.id.imgSearch).setVisibility(View.GONE);
         v.findViewById(R.id.btnAddNewStorage).setOnClickListener(v1 -> {
 
             String storageID = storageIDInput.getText().toString();

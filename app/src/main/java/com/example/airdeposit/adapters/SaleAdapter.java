@@ -37,8 +37,15 @@ public class SaleAdapter extends FirestoreRecyclerAdapter<Sale, SaleAdapter.Sale
                 StringBuilder sb = new StringBuilder();
 
                 for (String key : product.getPlacesDeposited().keySet()) {
+                    if(key.contains("Processing")){
+                        if(product.getPlacesDeposited().get(key) != 0){
+                            sb.append(key).append(" ");
+                        }
+                    }else{
+                        sb.append(key).append(" ");
+                    }
 
-                    sb.append(key).append(" ");
+
                 }
                 String placesDeposited = "Storages: " + sb.toString();
                 holder.placesDeposited.setText(placesDeposited);
@@ -47,7 +54,7 @@ public class SaleAdapter extends FirestoreRecyclerAdapter<Sale, SaleAdapter.Sale
                 calendar.setTime(model.getDateCreated());
                 String hour = String.valueOf(calendar.get(Calendar.HOUR_OF_DAY));
                 String minute = String.valueOf(calendar.get(Calendar.MINUTE));
-               // model.setProduct(product);
+
                 if (minute.length() == 1) {
                     holder.time.setText(hour + ":0" + minute);
                 } else {

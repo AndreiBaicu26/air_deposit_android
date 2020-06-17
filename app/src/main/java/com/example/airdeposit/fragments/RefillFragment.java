@@ -1,23 +1,17 @@
 package com.example.airdeposit.fragments;
 
-import android.animation.ObjectAnimator;
-import android.app.Activity;
+
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.telephony.RadioAccessSpecifier;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -31,19 +25,12 @@ import com.example.airdeposit.R;
 import com.example.airdeposit.Sale;
 import com.example.airdeposit.StorageSpace;
 import com.example.airdeposit.adapters.SaleAdapter;
-import com.example.airdeposit.adapters.StorageAdapter;
-import com.example.airdeposit.callbacks.CallbackGetStorage;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
 
 public class RefillFragment extends Fragment {
@@ -56,12 +43,13 @@ public class RefillFragment extends Fragment {
     private static View view;
     String selectedStorage;
 
-    boolean saleIsRefilled;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_refill, container, false);
+        getActivity().findViewById(R.id.custom_toolbar).findViewById(R.id.inputProductId).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.custom_toolbar).findViewById(R.id.imgSearch).setVisibility(View.GONE);
         noRefill = view.findViewById(R.id.tvNoRefill);
         setUpRecyclerView();
         setSwipeToRefill();
